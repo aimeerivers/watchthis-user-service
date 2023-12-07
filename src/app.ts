@@ -1,12 +1,16 @@
 import express from 'express';
 const app = express();
-const port = 3000;
 
-app.get('/', (req, res) => {
-  console.log(req)
+app.get('/', (_req, res) => {
   res.send('Hello World!');
 });
 
-app.listen(port, () => {
-  return console.log(`Express is listening at http://localhost:${port}`);
+app.post('/andre', (_req, res) => {
+  res.send('potato')
+})
+
+app.get('/hello/:name', (req, res) => {
+  res.send(`Hello ${req.params.name}!`);
 });
+
+export { app };
