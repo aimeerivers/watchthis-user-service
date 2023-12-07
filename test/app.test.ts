@@ -23,6 +23,24 @@ describe("App", () => {
     assert.equal(response.status, 404);
   });
 
+  it("should respond to /andre as a POST request", async () => {
+    const response = await fetch(baseUrl + "/andre", { method: "POST" });
+    const body = await response.text();
+    assert.ok(body.includes("potato"));
+  });
+
+  it("should say hello to aimee", async () => {
+    const response = await fetch(baseUrl + `/hello/aimee`);
+    const body = await response.text();
+    assert.ok(body.includes("Hello aimee!"));
+  });
+
+  it("should say hello to zoe", async () => {
+    const response = await fetch(baseUrl + "/hello/zoe");
+    const body = await response.text();
+    assert.ok(body.includes("<h1>Hello zoe!</h1>"));
+  });
+
   after(() => {
     server.close();
   });
