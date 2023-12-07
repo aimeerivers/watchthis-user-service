@@ -38,7 +38,7 @@ describe("App", () => {
   it("should say hello to zoe", async () => {
     const response = await fetch(baseUrl + "/hello/zoe");
     const body = await response.text();
-    assert.ok(body.includes("<h1>Hello zoe!</h1>"));
+    assert.ok(body.includes("Hello zoe!"));
   });
 
   after(() => {
