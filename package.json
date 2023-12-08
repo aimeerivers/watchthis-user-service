@@ -3,8 +3,11 @@
   "version": "1.0.0",
   "description": "User management service for WatchThis",
   "main": "dist/src/server.js",
+  "files": [
+    "dist/src"
+  ],
   "scripts": {
-    "test": "node --test dist/test/*.js",
+    "test": "node --test",
     "build": "npx tsc",
     "start": "node dist/src/server.js",
     "build-and-start": "npm run build && npm run start"
