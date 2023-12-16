@@ -1,3 +1,3 @@
 # watchthis-user-service
-User management service for WatchThis
 
+User management service for WatchThis
