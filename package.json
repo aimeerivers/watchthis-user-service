@@ -8,6 +8,8 @@
   ],
   "scripts": {
     "test": "node --test",
+    "lint": "eslint . --ext .ts,.js --fix",
+    "format": "prettier --write .",
     "build": "npx tsc",
     "start": "node dist/src/server.js",
     "build-and-start": "npm run build && npm run start"
@@ -34,5 +36,6 @@
   },
   "dependencies": {
     "express": "^4.17.21"
-  }
+  },
+  "prettier": "eslint-config-plus-prettier/.prettierrc.json"
 }
