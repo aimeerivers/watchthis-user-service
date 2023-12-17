@@ -6,8 +6,8 @@ app.get('/', (_req, res) => {
 });
 
 app.post('/andre', (_req, res) => {
-  res.send('potato')
-})
+  res.send('potato');
+});
 
 app.get('/hello/:name', (req, res) => {
   res.send(`Hello ${req.params.name}!`);
