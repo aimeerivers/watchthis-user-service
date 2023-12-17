@@ -2,16 +2,16 @@
   "name": "watchthis-user-service",
   "version": "1.0.0",
   "description": "User management service for WatchThis",
-  "main": "dist/src/server.js",
+  "main": "dist/server.js",
   "files": [
-    "dist/src"
+    "dist"
   ],
   "scripts": {
     "test": "node --test",
     "lint": "eslint . --ext .ts,.js --fix",
     "format": "prettier --write .",
     "build": "npx tsc",
-    "start": "node dist/src/server.js",
+    "start": "node dist/server.js",
     "build-and-start": "npm run build && npm run start"
   },
   "keywords": [],
