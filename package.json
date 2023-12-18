@@ -7,7 +7,8 @@
     "dist/src"
   ],
   "scripts": {
-    "test": "node --test",
+    "clean": "rm -rf dist",
+    "test": "node --test --require ts-node/register test/*.test.ts",
     "lint": "eslint . --ext .ts,.js --fix",
     "format": "prettier --write .",
     "build": "npx tsc",
@@ -22,7 +23,7 @@
     "@typescript-eslint/eslint-plugin": "^6.14.0",
     "@typescript-eslint/parser": "^6.14.0",
     "eslint": "^8.56.0",
-    "eslint-config-plus-prettier": "^1.1.2",
+    "eslint-config-plus-prettier": "^1.3.0",
     "eslint-config-prettier": "^9.1.0",
     "eslint-config-standard-with-typescript": "^43.0.0",
     "eslint-plugin-import": "^2.29.1",
@@ -32,6 +33,7 @@
     "eslint-plugin-simple-import-sort": "^10.0.0",
     "eslint-plugin-unused-imports": "^3.0.0",
     "prettier": "^3.1.1",
+    "ts-node": "^10.9.2",
     "typescript": "^5.3.3"
   },
   "dependencies": {
