@@ -4,6 +4,11 @@ User management service for WatchThis
 
 ## Getting started
 
+Add a `.env` file and add some environment variables:
+
+    MONGO_URI=mongodb://localhost:27017
+    MONGO_DB=user-service
+
 Install npm dependencies
 
     npm install
@@ -20,3 +25,24 @@ Run mongodb locally
 If you want a GUI to look at the database, i recommend
 
     brew install mongodb-compass
+
+## Build the source code
+
+    npm run build
+
+## Run unit tests
+
+    npm run test
+
+## Run the server locally
+
+    npm run start
+
+Visit http://localhost:3000 in your browser
+
+## Formatting code
+
+The project uses ESLint and Prettier to ensure consistent coding standards.
+
+    npm run lint
+    npm run format
