@@ -1,11 +1,18 @@
 import path from "path";
+import dotenv from "dotenv";
+
 import express from "express";
 import mongoose from "mongoose";
 
 import { User } from "./models/user";
+dotenv.config();
+
+const mongoUri = process.env.MONGO_URI ?? "mongodb://localhost:27017";
+const mongoDb = process.env.MONGO_DB ?? "user-service";
+const mongoConnectionString = `${mongoUri}/${mongoDb}${process.env.NODE_ENV === "test" ? "-test" : ""}`;
 
 mongoose
-  .connect("mongodb://localhost:27017/user-service")
+  .connect(mongoConnectionString)
   .then(() => {
     console.log("Database connected!");
   })
