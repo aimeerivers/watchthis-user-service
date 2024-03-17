@@ -79,6 +79,14 @@ passport.use(
   })
 );
 
+function ensureAuthenticated(req: express.Request, res: express.Response, next: () => void): void {
+  if (req.user !== null && req.user !== undefined) {
+    next();
+  } else {
+    res.redirect("/signup");
+  }
+}
+
 app.set("view engine", "pug");
 app.set("views", path.join(__dirname, "views"));
 // app.use(express.static(path.join(__dirname, 'public')));
@@ -107,9 +115,9 @@ app.post("/signup", async (req, res) => {
   }
 });
 
-app.get("/dashboard", async (_req, res) => {
+app.get("/dashboard", ensureAuthenticated, async (req, res) => {
   const users = await User.find();
-  res.render("dashboard", { users });
+  res.render("dashboard", { users, currentUser: req.user });
 });
 
 app.get("/", (_req, res) => {

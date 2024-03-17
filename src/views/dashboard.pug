@@ -4,6 +4,7 @@ html
     title Dashboard
   body
     h2 Dashboard
+    p Welcome, #{currentUser.username}!
     ul
       each user in users
         li= user.username
