@@ -38,7 +38,7 @@ If you want a GUI to look at the database, i recommend
 
     npm run start
 
-Visit http://localhost:3000 in your browser
+Visit http://localhost:8583 in your browser
 
 ## Formatting code
 

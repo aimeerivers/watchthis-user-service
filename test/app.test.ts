@@ -9,7 +9,7 @@ import request from "supertest";
 import { app } from "../src/app";
 import { User } from "../src/models/user";
 
-const port = 3001;
+const port = 18583;
 let server: Server;
 
 describe("App", () => {
