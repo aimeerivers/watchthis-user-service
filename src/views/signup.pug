@@ -3,10 +3,12 @@ html
   head
     title Signup
   body
-    h2 Signup Form
+    h2 Signup
     form#signup-form(action='/signup' method='post')
       label(for='username') Username:
       input#username(type='text' name='username' required)
+      br
       label(for='password') Password:
       input#password(type='password' name='password' required)
+      br
       input(type='submit' value='Submit')
