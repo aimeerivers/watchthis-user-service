@@ -1,3 +1,12 @@
 {
-  "extends": "eslint-config-plus-prettier"
+  "extends": "eslint-config-plus-prettier",
+  "overrides": [
+    {
+      "files": ["src/app.ts"],
+      "rules": {
+        "@typescript-eslint/no-misused-promises": "off",
+        "simple-import-sort/imports": "off"
+      }
+    }
+  ]
 }

@@ -1,0 +1,12 @@
+doctype html
+html
+  head
+    title Signup
+  body
+    h2 Signup Form
+    form#signup-form(action='/signup' method='post')
+      label(for='username') Username:
+      input#username(type='text' name='username' required)
+      label(for='password') Password:
+      input#password(type='password' name='password' required)
+      input(type='submit' value='Submit')

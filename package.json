@@ -11,7 +11,7 @@
     "test": "node --test --require ts-node/register test/*.test.ts",
     "lint": "eslint . --ext .ts,.js --fix",
     "format": "prettier --write .",
-    "build": "npx tsc",
+    "build": "npx tsc && mkdir -p dist/src/views && cp src/views/* dist/src/views",
     "start": "node dist/src/server.js",
     "build-and-start": "npm run build && npm run start"
   },
