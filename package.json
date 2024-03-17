@@ -8,7 +8,7 @@
   ],
   "scripts": {
     "clean": "rm -rf dist",
-    "test": "node --test --require ts-node/register test/*.test.ts",
+    "test": "NODE_ENV=test node --test --require ts-node/register test/*.test.ts",
     "lint": "eslint . --ext .ts,.js --fix",
     "format": "prettier --write .",
     "build": "npx tsc && mkdir -p dist/src/views && cp src/views/* dist/src/views",
