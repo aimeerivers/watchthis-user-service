@@ -4,6 +4,7 @@ import { after, before, describe, it } from "node:test";
 
 import { faker } from "@faker-js/faker";
 import mongoose from "mongoose";
+import request from "supertest";
 
 import { app } from "../src/app";
 import { User } from "../src/models/user";
@@ -17,21 +18,28 @@ describe("App", () => {
     server = app.listen(port);
   });
 
+  describe("Dashboard", () => {
+    it("should require authentication", async () => {
+      const res = await request(app).get("/dashboard");
+      assert.equal(res.statusCode, 302);
+      assert.equal(res.headers.location, "/signup");
+    });
+  });
+
   describe("Signup", () => {
     it("should render the signup page", async () => {
-      const response = await fetch(baseUrl + "/signup");
-      const body = await response.text();
-      assert.ok(body.includes("form"));
+      const res = await request(app).get("/signup");
+      assert.equal(res.statusCode, 200);
+      assert.ok(res.text.includes("form"));
     });
 
-    it("should create a user", async () => {
-      const response = await fetch(baseUrl + "/signup", {
-        method: "POST",
-        headers: { "Content-Type": "application/x-www-form-urlencoded" },
-        body: new URLSearchParams({ username: faker.internet.userName(), password: faker.internet.password() }),
-      });
-      assert.equal(response.status, 200);
-      assert.equal(response.url, baseUrl + "/dashboard");
+    it("should create a user and redirect to the dashboard", async () => {
+      const res = await request(app)
+        .post("/signup")
+        .type("form")
+        .send({ username: faker.internet.userName(), password: faker.internet.password() });
+      assert.equal(res.statusCode, 302);
+      assert.equal(res.headers.location, "/dashboard");
     });
   });
 
