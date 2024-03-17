@@ -1,9 +1,15 @@
 import path from "path";
+import bcrypt from "bcrypt";
 import dotenv from "dotenv";
 
 import express from "express";
+import session from "express-session";
 import mongoose from "mongoose";
 
+import passport from "passport";
+import { Strategy as LocalStrategy } from "passport-local";
+
+import type { IUser } from "./models/user";
 import { User } from "./models/user";
 dotenv.config();
 
@@ -23,6 +29,56 @@ mongoose
 const app = express();
 app.use(express.urlencoded({ extended: true }));
 
+app.use(
+  session({
+    secret: "ABC123!@#",
+    resave: false,
+    saveUninitialized: false,
+  })
+);
+
+app.use(passport.initialize());
+app.use(passport.session());
+
+passport.serializeUser(function (user, done) {
+  done(null, (user as IUser).id);
+});
+
+passport.deserializeUser(async function (id, done) {
+  try {
+    const user = await User.findById(id);
+    done(null, user);
+  } catch (err) {
+    done(err);
+  }
+});
+
+passport.use(
+  new LocalStrategy(function (username, password, done) {
+    User.findOne({ username }, function (err: unknown, user: IUser) {
+      if (err !== null && err !== undefined) {
+        done(err);
+        return;
+      }
+      if (user === null || user === undefined) {
+        done(null, false);
+        return;
+      }
+      bcrypt.compare(password, user.password, function (err, result) {
+        if (err !== null && err !== undefined) {
+          done(err);
+          return;
+        }
+        if (result === null || result === undefined) {
+          done(null, false);
+          return;
+        }
+        done(null, user);
+      });
+    });
+  })
+);
+
 app.set("view engine", "pug");
 app.set("views", path.join(__dirname, "views"));
 // app.use(express.static(path.join(__dirname, 'public')));
@@ -38,7 +94,14 @@ app.post("/signup", async (req, res) => {
       password: req.body.password,
     });
     await user.save();
-    res.redirect("/dashboard");
+
+    req.login(user, function (err) {
+      if (err !== null && err !== undefined) {
+        console.log(err);
+        return res.status(500).send();
+      }
+      res.redirect("/dashboard");
+    });
   } catch {
     res.status(500).send();
   }

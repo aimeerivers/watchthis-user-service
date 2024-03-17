@@ -1,7 +1,14 @@
 import bcrypt from "bcrypt";
+import type { Document } from "mongoose";
 import mongoose from "mongoose";
 
-const UserSchema = new mongoose.Schema({
+export interface IUser extends Document {
+  id: string;
+  username: string;
+  password: string;
+}
+
+const UserSchema = new mongoose.Schema<IUser>({
   username: {
     type: String,
     required: true,
@@ -11,6 +18,14 @@ const UserSchema = new mongoose.Schema({
     type: String,
     required: true,
   },
+});
+
+UserSchema.virtual("id").get(function () {
+  return this._id.toHexString();
+});
+
+UserSchema.set("toJSON", {
+  virtuals: true,
 });
 
 UserSchema.pre("save", async function (next) {
