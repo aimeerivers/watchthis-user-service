@@ -1,3 +1,4 @@
+import crypto from "crypto";
 import path from "path";
 import bcrypt from "bcrypt";
 import dotenv from "dotenv";
@@ -16,6 +17,7 @@ dotenv.config();
 const mongoUri = process.env.MONGO_URI ?? "mongodb://localhost:27017";
 const mongoDb = process.env.MONGO_DB ?? "user-service";
 const mongoConnectionString = `${mongoUri}/${mongoDb}${process.env.NODE_ENV === "test" ? "-test" : ""}`;
+const sessionSecret = process.env.SESSION_SECRET ?? crypto.randomBytes(64).toString("hex");
 
 mongoose
   .connect(mongoConnectionString)
@@ -31,7 +33,7 @@ app.use(express.urlencoded({ extended: true }));
 
 app.use(
   session({
-    secret: "ABC123!@#",
+    secret: sessionSecret,
     resave: false,
     saveUninitialized: false,
   })
