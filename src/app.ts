@@ -2,11 +2,9 @@ import crypto from "crypto";
 import path from "path";
 import bcrypt from "bcrypt";
 import dotenv from "dotenv";
-
 import express from "express";
 import session from "express-session";
 import mongoose from "mongoose";
-
 import passport from "passport";
 import { Strategy as LocalStrategy } from "passport-local";
 
@@ -46,13 +44,15 @@ passport.serializeUser(function (user, done) {
   done(null, (user as IUser).id);
 });
 
-passport.deserializeUser(async function (id, done) {
-  try {
-    const user = await User.findById(id);
-    done(null, user);
-  } catch (err) {
-    done(err);
-  }
+passport.deserializeUser(function (id, done) {
+  (async function () {
+    try {
+      const user = await User.findById(id);
+      done(null, user);
+    } catch (err) {
+      done(err);
+    }
+  })();
 });
 
 passport.use(
@@ -81,7 +81,7 @@ passport.use(
   })
 );
 
-function ensureAuthenticated(req: express.Request, res: express.Response, next: () => void): void {
+function ensureAuthenticated(req: express.Request, res: express.Response, next: (err?: unknown) => void): void {
   if (req.user !== null && req.user !== undefined) {
     next();
   } else {
@@ -97,29 +97,37 @@ app.get("/signup", (_req, res) => {
   res.render("signup");
 });
 
-app.post("/signup", async (req, res) => {
-  try {
-    const user = new User({
-      username: req.body.username,
-      password: req.body.password,
-    });
-    await user.save();
+app.post("/signup", (req, res) => {
+  (async function () {
+    try {
+      const user = new User({
+        username: req.body.username,
+        password: req.body.password,
+      });
+      await user.save();
 
-    req.login(user, function (err) {
-      if (err !== null && err !== undefined) {
-        console.log(err);
-        return res.status(500).send();
-      }
-      res.redirect("/dashboard");
-    });
-  } catch {
-    res.status(500).send();
-  }
+      req.login(user, function (err) {
+        if (err !== null && err !== undefined) {
+          console.log(err);
+          return res.status(500).send();
+        }
+        res.redirect("/dashboard");
+      });
+    } catch {
+      res.status(500).send();
+    }
+  })();
 });
 
-app.get("/dashboard", ensureAuthenticated, async (req, res) => {
-  const users = await User.find();
-  res.render("dashboard", { users, currentUser: req.user });
+app.get("/dashboard", ensureAuthenticated, (req, res, next) => {
+  (async () => {
+    try {
+      const users = await User.find();
+      res.render("dashboard", { users, currentUser: req.user });
+    } catch (err) {
+      next(err);
+    }
+  })();
 });
 
 app.get("/", (_req, res) => {
