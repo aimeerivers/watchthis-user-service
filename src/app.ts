@@ -55,31 +55,26 @@ passport.deserializeUser(function (id, done) {
   })();
 });
 
-passport.use(
-  new LocalStrategy(function (username, password, done) {
-    User.findOne({ username }, function (err: unknown, user: IUser) {
-      if (err !== null && err !== undefined) {
-        done(err);
-        return;
+passport.use(new LocalStrategy(
+  async (username, password, done) => {
+    try {
+      const user = await User.findOne({ username: username });
+      if (!user) {
+        return done(null, false, { message: 'Incorrect username.' });
       }
-      if (user === null || user === undefined) {
-        done(null, false);
-        return;
+      // Use bcrypt to compare the hashed password
+      const match = await bcrypt.compare(password, user.password);
+      if (!match) {
+        return done(null, false, { message: 'Incorrect password.' });
       }
-      bcrypt.compare(password, user.password, function (err, result) {
-        if (err !== null && err !== undefined) {
-          done(err);
-          return;
-        }
-        if (result === null || result === undefined) {
-          done(null, false);
-          return;
-        }
-        done(null, user);
-      });
-    });
-  })
-);
+      return done(null, user);
+    } catch (err) {
+      return done(err);
+    }
+  }
+));
+
+
 
 function ensureAuthenticated(req: express.Request, res: express.Response, next: (err?: unknown) => void): void {
   if (req.user !== null && req.user !== undefined) {
