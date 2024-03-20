@@ -125,6 +125,18 @@ app.get("/dashboard", ensureAuthenticated, (req, res, next) => {
   })();
 });
 
+app.post("/logout", (req, res) => {
+  req.logout({}, (err: unknown) => {
+    if (err !== null && err !== undefined) {
+      // Handle the error as needed, perhaps logging it or sending a different response
+      console.error(err);
+      return res.status(500).send("An error occurred while logging out");
+    }
+    // Redirect or respond as needed if logout is successful
+    res.redirect("/");
+  });
+});
+
 app.get("/", (_req, res) => {
   res.render("welcome-page");
 });
