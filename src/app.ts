@@ -55,26 +55,26 @@ passport.deserializeUser(function (id, done) {
   })();
 });
 
-passport.use(new LocalStrategy(
-  async (username, password, done) => {
+passport.use(
+  new LocalStrategy(async (username, password, done) => {
     try {
-      const user = await User.findOne({ username: username });
-      if (!user) {
-        return done(null, false, { message: 'Incorrect username.' });
+      const user = await User.findOne({ username });
+      if (user === null || user === undefined) {
+        done(null, false, { message: "Incorrect username." });
+        return;
       }
       // Use bcrypt to compare the hashed password
       const match = await bcrypt.compare(password, user.password);
-      if (!match) {
-        return done(null, false, { message: 'Incorrect password.' });
+      if (match === null || match === undefined) {
+        done(null, false, { message: "Incorrect password." });
+        return;
       }
-      return done(null, user);
+      done(null, user);
     } catch (err) {
-      return done(err);
+      done(err);
     }
-  }
-));
-
-
+  })
+);
 
 function ensureAuthenticated(req: express.Request, res: express.Response, next: (err?: unknown) => void): void {
   if (req.user !== null && req.user !== undefined) {
@@ -118,12 +118,10 @@ app.get("/login", (req, res) => {
   res.render("login");
 });
 
-app.post('/login',
-  passport.authenticate('local', { successRedirect: '/dashboard',
-                                   failureRedirect: '/',
-                                  failureFlash: false })
+app.post(
+  "/login",
+  passport.authenticate("local", { successRedirect: "/dashboard", failureRedirect: "/", failureFlash: false })
 );
-
 
 app.get("/dashboard", ensureAuthenticated, (req, res, next) => {
   (async () => {

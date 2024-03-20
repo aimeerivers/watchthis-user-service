@@ -11,7 +11,6 @@ import { User } from "../src/models/user";
 
 const port = 18583;
 let server: Server;
-
 describe("App", () => {
   before(() => {
     server = app.listen(port);
