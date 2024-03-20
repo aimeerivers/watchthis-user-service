@@ -114,6 +114,17 @@ app.post("/signup", (req, res) => {
   })();
 });
 
+app.get("/login", (req, res) => {
+  res.render("login");
+});
+
+app.post('/login',
+  passport.authenticate('local', { successRedirect: '/dashboard',
+                                   failureRedirect: '/',
+                                  failureFlash: false })
+);
+
+
 app.get("/dashboard", ensureAuthenticated, (req, res, next) => {
   (async () => {
     try {
