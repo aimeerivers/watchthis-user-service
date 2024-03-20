@@ -126,7 +126,7 @@ app.get("/dashboard", ensureAuthenticated, (req, res, next) => {
 });
 
 app.get("/", (_req, res) => {
-  res.send("Hello World!");
+  res.render("welcome-page");
 });
 
 app.post("/andre", (_req, res) => {
