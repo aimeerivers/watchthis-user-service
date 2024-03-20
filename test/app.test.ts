@@ -42,6 +42,22 @@ describe("App", () => {
     });
   });
 
+  describe("Sign in", () => {
+    before(async () => {
+      const user = new User({
+        username: faker.internet.userName(),
+        password: faker.internet.password(),
+      });
+      await user.save();
+    });
+
+    it("Should be able to sign in", async () => {
+      // todo
+    });
+
+    it("Should sign out", async () => {});
+  });
+
   it("should say hello world", async () => {
     const res = await request(app).get("/");
     assert.ok(res.text.includes("Hello World!"));
