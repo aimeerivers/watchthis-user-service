@@ -109,7 +109,7 @@ app.post("/signup", (req, res) => {
         res.redirect("/dashboard");
       });
     } catch {
-      res.status(500).send();
+      res.status(500).send("YOU IDIOT THATS TAKEN!");
     }
   })();
 });
