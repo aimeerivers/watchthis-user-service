@@ -24,7 +24,7 @@ describe("App", () => {
     });
   });
 
-  describe("Signup", () => {
+  describe("Sign up", () => {
     it("should render the signup page", async () => {
       const res = await request(app).get("/signup");
       assert.equal(res.statusCode, 200);
@@ -41,7 +41,41 @@ describe("App", () => {
     });
   });
 
-  describe("Sign in", () => {
+  describe("Log in", () => {
+    let username: string;
+    let password: string;
+
+    before(async () => {
+      username = faker.internet.userName();
+      password = faker.internet.password();
+
+      const user = new User({
+        username,
+        password,
+      });
+      await user.save();
+    });
+
+    it("should be able to log in with known username and password", async () => {
+      const res = await request(app).post("/login").type("form").send({ username, password });
+      assert.equal(res.statusCode, 302);
+      assert.equal(res.headers.location, "/dashboard");
+    });
+
+    it("should not be able to log in with incorrect password", async () => {
+      const res = await request(app).post("/login").type("form").send({ username, password: "wrongpassword" });
+      assert.equal(res.statusCode, 302);
+      assert.equal(res.headers.location, "/");
+    });
+
+    it("should not be able to log in with invalid username", async () => {
+      const res = await request(app).post("/login").type("form").send({ username: "invalidusername", password });
+      assert.equal(res.statusCode, 302);
+      assert.equal(res.headers.location, "/");
+    });
+  });
+
+  describe("Sign out", () => {
     before(async () => {
       const user = new User({
         username: faker.internet.userName(),
@@ -50,11 +84,9 @@ describe("App", () => {
       await user.save();
     });
 
-    it("Should be able to sign in", async () => {
+    it("should sign out", async () => {
       // todo
     });
-
-    it("Should sign out", async () => {});
   });
 
   it("should say hello world", async () => {
