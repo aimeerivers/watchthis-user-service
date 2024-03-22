@@ -9,6 +9,9 @@ import request from "supertest";
 import { app } from "../src/app";
 import { User } from "../src/models/user";
 
+// eslint-disable-next-line @typescript-eslint/no-var-requires
+const session = require("supertest-session");
+
 const port = 18583;
 let server: Server;
 describe("App", () => {
@@ -75,17 +78,40 @@ describe("App", () => {
     });
   });
 
-  describe("Sign out", () => {
+  describe("Log out", () => {
+    let testSession: request.SuperTest<request.Test>;
+    let username: string;
+    let password: string;
+
     before(async () => {
+      testSession = session(app);
+      username = faker.internet.userName();
+      password = faker.internet.password();
+
       const user = new User({
-        username: faker.internet.userName(),
-        password: faker.internet.password(),
+        username,
+        password,
       });
       await user.save();
+      await testSession.post("/login").type("form").send({ username, password });
     });
 
-    it("should sign out", async () => {
-      // todo
+    it("should log out", async () => {
+      let res: request.Response;
+
+      // Ensure logged in
+      res = await testSession.get("/dashboard");
+      assert.ok(res.text.includes("Dashboard"));
+
+      // Log out
+      res = await testSession.post("/logout");
+      assert.equal(res.statusCode, 302);
+      assert.equal(res.headers.location, "/");
+
+      // Ensure logged out
+      res = await testSession.get("/dashboard");
+      assert.equal(res.statusCode, 302);
+      assert.equal(res.headers.location, "/login");
     });
   });
 
