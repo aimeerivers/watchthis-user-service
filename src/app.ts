@@ -1,7 +1,7 @@
 import crypto from "crypto";
 import path from "path";
-import bcrypt from "bcrypt";
 import dotenv from "dotenv";
+import type { RequestHandler } from "express";
 import express from "express";
 import session from "express-session";
 import mongoose from "mongoose";
@@ -56,33 +56,48 @@ passport.deserializeUser(function (id, done) {
 });
 
 passport.use(
-  new LocalStrategy(async (username, password, done) => {
-    try {
-      const user = await User.findOne({ username });
-      if (user === null || user === undefined) {
-        done(null, false, { message: "Incorrect username." });
-        return;
+  new LocalStrategy((username, password, done) => {
+    (async () => {
+      try {
+        const user = await User.findOne({ username });
+
+        if (user === null || user === undefined) {
+          done(null, false, { message: "Incorrect username." });
+          return;
+        }
+
+        const isMatch = await user.comparePassword(password);
+
+        if (!isMatch) {
+          done(null, false, { message: "Incorrect password." });
+          return;
+        }
+
+        done(null, user);
+      } catch (err) {
+        done(err);
       }
-      // Use bcrypt to compare the hashed password
-      const match = await bcrypt.compare(password, user.password);
-      if (match === null || match === undefined) {
-        done(null, false, { message: "Incorrect password." });
-        return;
-      }
-      done(null, user);
-    } catch (err) {
-      done(err);
-    }
+    })();
   })
 );
 
-function ensureAuthenticated(req: express.Request, res: express.Response, next: (err?: unknown) => void): void {
-  if (req.user !== null && req.user !== undefined) {
+const ensureAuthenticated: RequestHandler = (
+  req: express.Request,
+  res: express.Response,
+  next: express.NextFunction
+) => {
+  if (req.isAuthenticated()) {
     next();
-  } else {
-    res.redirect("/signup");
+    return;
   }
-}
+  res.redirect("/login");
+};
+
+const authenticate: RequestHandler = passport.authenticate("local", {
+  successRedirect: "/dashboard",
+  failureRedirect: "/",
+  failureFlash: false,
+});
 
 app.set("view engine", "pug");
 app.set("views", path.join(__dirname, "views"));
@@ -118,10 +133,7 @@ app.get("/login", (req, res) => {
   res.render("login");
 });
 
-app.post(
-  "/login",
-  passport.authenticate("local", { successRedirect: "/dashboard", failureRedirect: "/", failureFlash: false })
-);
+app.post("/login", authenticate);
 
 app.get("/dashboard", ensureAuthenticated, (req, res, next) => {
   (async () => {
