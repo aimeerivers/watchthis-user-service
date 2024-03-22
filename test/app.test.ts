@@ -20,7 +20,7 @@ describe("App", () => {
     it("should require authentication", async () => {
       const res = await request(app).get("/dashboard");
       assert.equal(res.statusCode, 302);
-      assert.equal(res.headers.location, "/signup");
+      assert.equal(res.headers.location, "/login");
     });
   });
 
