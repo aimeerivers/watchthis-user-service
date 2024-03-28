@@ -1,11 +1,3 @@
 {
-  "extends": "eslint-config-plus-prettier",
-  "overrides": [
-    {
-      "files": ["src/app.ts"],
-      "rules": {
-        "simple-import-sort/imports": "off"
-      }
-    }
-  ]
+  "extends": "eslint-config-plus-prettier"
 }
