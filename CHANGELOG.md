@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.4.0](https://github.com/aimeerivers/watchthis-user-service/compare/v1.3.0...v1.4.0) (2024-03-29)
+
+
+### Features
+
+* **app:** persist login session in mongodb between server restarts ([#21](https://github.com/aimeerivers/watchthis-user-service/issues/21)) ([7c0a7c1](https://github.com/aimeerivers/watchthis-user-service/commit/7c0a7c14398f29c8255ab470e7cfdaef3c8b5bbd))
+
 ## [1.3.0](https://github.com/aimeerivers/watchthis-user-service/compare/v1.2.0...v1.3.0) (2024-03-29)
 
 
