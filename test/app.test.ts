@@ -116,9 +116,9 @@ describe("App", () => {
     });
   });
 
-  it("should say hello world", async () => {
+  it("should show the welcome page", async () => {
     const res = await request(app).get("/");
-    assert.ok(res.text.includes("Welcome to watch this!"));
+    assert.ok(res.text.includes("Welcome to Watch This!"));
   });
 
   it("should give a 404 when a route is not found", async () => {
