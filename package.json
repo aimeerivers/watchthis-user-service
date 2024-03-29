@@ -9,16 +9,16 @@
     "public"
   ],
   "scripts": {
-    "clean": "rm -rf dist",
-    "test": "npm run build && NODE_ENV=test node --test --require ts-node/register test/*.test.ts",
-    "lint": "eslint . --ext .ts,.js --fix",
-    "tidy": "npm run lint && npm run format",
-    "format": "prettier --write .",
-    "build": "tsc",
     "build:watch": "tsc --watch",
-    "start": "node dist/src/server.js",
+    "build": "tsc",
+    "clean": "rm -rf dist",
+    "dev": "concurrently \"npm run build:watch\" \"npm run start:watch\"",
+    "format": "prettier --write .",
+    "lint": "eslint . --ext .ts,.js --fix",
     "start:watch": "nodemon dist/src/server.js",
-    "dev": "concurrently \"npm run build:watch\" \"npm run start:watch\""
+    "start": "node dist/src/server.js",
+    "test": "npm run build && NODE_ENV=test node --test --require ts-node/register test/*.test.ts",
+    "tidy": "npm run lint && npm run format"
   },
   "keywords": [],
   "author": "",
