@@ -1,7 +1,7 @@
 import crypto from "crypto";
 import path from "path";
-import bcrypt from "bcrypt";
 import dotenv from "dotenv";
+import type { RequestHandler } from "express";
 import express from "express";
 import session from "express-session";
 import mongoose from "mongoose";
@@ -56,38 +56,48 @@ passport.deserializeUser(function (id, done) {
 });
 
 passport.use(
-  new LocalStrategy(function (username, password, done) {
-    User.findOne({ username }, function (err: unknown, user: IUser) {
-      if (err !== null && err !== undefined) {
-        done(err);
-        return;
-      }
-      if (user === null || user === undefined) {
-        done(null, false);
-        return;
-      }
-      bcrypt.compare(password, user.password, function (err, result) {
-        if (err !== null && err !== undefined) {
-          done(err);
+  new LocalStrategy((username, password, done) => {
+    (async () => {
+      try {
+        const user = await User.findOne({ username });
+
+        if (user === null || user === undefined) {
+          done(null, false, { message: "Incorrect username." });
           return;
         }
-        if (result === null || result === undefined) {
-          done(null, false);
+
+        const isMatch = await user.comparePassword(password);
+
+        if (!isMatch) {
+          done(null, false, { message: "Incorrect password." });
           return;
         }
+
         done(null, user);
-      });
-    });
+      } catch (err) {
+        done(err);
+      }
+    })();
   })
 );
 
-function ensureAuthenticated(req: express.Request, res: express.Response, next: (err?: unknown) => void): void {
-  if (req.user !== null && req.user !== undefined) {
+const ensureAuthenticated: RequestHandler = (
+  req: express.Request,
+  res: express.Response,
+  next: express.NextFunction
+) => {
+  if (req.isAuthenticated()) {
     next();
-  } else {
-    res.redirect("/signup");
+    return;
   }
-}
+  res.redirect("/login");
+};
+
+const authenticate: RequestHandler = passport.authenticate("local", {
+  successRedirect: "/dashboard",
+  failureRedirect: "/",
+  failureFlash: false,
+});
 
 app.set("view engine", "pug");
 app.set("views", path.join(__dirname, "views"));
@@ -114,10 +124,16 @@ app.post("/signup", (req, res) => {
         res.redirect("/dashboard");
       });
     } catch {
-      res.status(500).send();
+      res.status(500).send("YOU IDIOT THATS TAKEN!");
     }
   })();
 });
+
+app.get("/login", (req, res) => {
+  res.render("login");
+});
+
+app.post("/login", authenticate);
 
 app.get("/dashboard", ensureAuthenticated, (req, res, next) => {
   (async () => {
@@ -130,8 +146,20 @@ app.get("/dashboard", ensureAuthenticated, (req, res, next) => {
   })();
 });
 
+app.post("/logout", (req, res) => {
+  req.logout({}, (err: unknown) => {
+    if (err !== null && err !== undefined) {
+      // Handle the error as needed, perhaps logging it or sending a different response
+      console.error(err);
+      return res.status(500).send("An error occurred while logging out");
+    }
+    // Redirect or respond as needed if logout is successful
+    res.redirect("/");
+  });
+});
+
 app.get("/", (_req, res) => {
-  res.send("Hello World!");
+  res.render("welcome-page");
 });
 
 app.post("/andre", (_req, res) => {

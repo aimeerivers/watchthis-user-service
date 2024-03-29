@@ -9,9 +9,11 @@ import request from "supertest";
 import { app } from "../src/app";
 import { User } from "../src/models/user";
 
+// eslint-disable-next-line @typescript-eslint/no-var-requires
+const session = require("supertest-session");
+
 const port = 18583;
 let server: Server;
-
 describe("App", () => {
   before(() => {
     server = app.listen(port);
@@ -21,11 +23,11 @@ describe("App", () => {
     it("should require authentication", async () => {
       const res = await request(app).get("/dashboard");
       assert.equal(res.statusCode, 302);
-      assert.equal(res.headers.location, "/signup");
+      assert.equal(res.headers.location, "/login");
     });
   });
 
-  describe("Signup", () => {
+  describe("Sign up", () => {
     it("should render the signup page", async () => {
       const res = await request(app).get("/signup");
       assert.equal(res.statusCode, 200);
@@ -42,9 +44,80 @@ describe("App", () => {
     });
   });
 
+  describe("Log in", () => {
+    let username: string;
+    let password: string;
+
+    before(async () => {
+      username = faker.internet.userName();
+      password = faker.internet.password();
+
+      const user = new User({
+        username,
+        password,
+      });
+      await user.save();
+    });
+
+    it("should be able to log in with known username and password", async () => {
+      const res = await request(app).post("/login").type("form").send({ username, password });
+      assert.equal(res.statusCode, 302);
+      assert.equal(res.headers.location, "/dashboard");
+    });
+
+    it("should not be able to log in with incorrect password", async () => {
+      const res = await request(app).post("/login").type("form").send({ username, password: "wrongpassword" });
+      assert.equal(res.statusCode, 302);
+      assert.equal(res.headers.location, "/");
+    });
+
+    it("should not be able to log in with invalid username", async () => {
+      const res = await request(app).post("/login").type("form").send({ username: "invalidusername", password });
+      assert.equal(res.statusCode, 302);
+      assert.equal(res.headers.location, "/");
+    });
+  });
+
+  describe("Log out", () => {
+    let testSession: request.SuperTest<request.Test>;
+    let username: string;
+    let password: string;
+
+    before(async () => {
+      testSession = session(app);
+      username = faker.internet.userName();
+      password = faker.internet.password();
+
+      const user = new User({
+        username,
+        password,
+      });
+      await user.save();
+      await testSession.post("/login").type("form").send({ username, password });
+    });
+
+    it("should log out", async () => {
+      let res: request.Response;
+
+      // Ensure logged in
+      res = await testSession.get("/dashboard");
+      assert.ok(res.text.includes("Dashboard"));
+
+      // Log out
+      res = await testSession.post("/logout");
+      assert.equal(res.statusCode, 302);
+      assert.equal(res.headers.location, "/");
+
+      // Ensure logged out
+      res = await testSession.get("/dashboard");
+      assert.equal(res.statusCode, 302);
+      assert.equal(res.headers.location, "/login");
+    });
+  });
+
   it("should say hello world", async () => {
     const res = await request(app).get("/");
-    assert.ok(res.text.includes("Hello World!"));
+    assert.ok(res.text.includes("Welcome to watch this!"));
   });
 
   it("should give a 404 when a route is not found", async () => {

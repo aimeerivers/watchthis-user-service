@@ -5,6 +5,8 @@ html
   body
     h2 Dashboard
     p Welcome, #{currentUser.username}!
+    form(action="/logout", method="POST")
+      button(type="submit") Logout 
     ul
       each user in users
         li= user.username

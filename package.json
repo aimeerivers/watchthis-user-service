@@ -8,8 +8,9 @@
   ],
   "scripts": {
     "clean": "rm -rf dist",
-    "test": "NODE_ENV=test node --test --require ts-node/register test/*.test.ts",
+    "test": "npm run build && NODE_ENV=test node --test --require ts-node/register test/*.test.ts",
     "lint": "eslint . --ext .ts,.js --fix",
+    "tidy": "npm run lint && npm run format",
     "format": "prettier --write .",
     "build": "npx tsc && mkdir -p dist/src/views && cp src/views/* dist/src/views",
     "start": "node dist/src/server.js",
@@ -36,6 +37,7 @@
     "eslint-plugin-unused-imports": "^3.1.0",
     "prettier": "^3.2.5",
     "supertest": "^6.3.4",
+    "supertest-session": "^5.0.1",
     "ts-node": "^10.9.2",
     "typescript": "^5.4.3"
   },
