@@ -1,21 +1,16 @@
-import crypto from "crypto";
 import path from "path";
 import dotenv from "dotenv";
-import type { RequestHandler } from "express";
 import express from "express";
-import session from "express-session";
 import mongoose from "mongoose";
-import passport from "passport";
-import { Strategy as LocalStrategy } from "passport-local";
 
-import type { IUser } from "./models/user";
+import { applyAuthenticationMiddleware, authenticate, ensureAuthenticated } from "./authentication";
 import { User } from "./models/user";
+
 dotenv.config();
 
 const mongoUri = process.env.MONGO_URI ?? "mongodb://localhost:27017";
 const mongoDb = process.env.MONGO_DB ?? "user-service";
 const mongoConnectionString = `${mongoUri}/${mongoDb}${process.env.NODE_ENV === "test" ? "-test" : ""}`;
-const sessionSecret = process.env.SESSION_SECRET ?? crypto.randomBytes(64).toString("hex");
 
 mongoose
   .connect(mongoConnectionString)
@@ -27,77 +22,10 @@ mongoose
   });
 
 const app = express();
+
+applyAuthenticationMiddleware(app);
+
 app.use(express.urlencoded({ extended: true }));
-
-app.use(
-  session({
-    secret: sessionSecret,
-    resave: false,
-    saveUninitialized: false,
-  })
-);
-
-app.use(passport.initialize());
-app.use(passport.session());
-
-passport.serializeUser(function (user, done) {
-  done(null, (user as IUser).id);
-});
-
-passport.deserializeUser(function (id, done) {
-  (async function () {
-    try {
-      const user = await User.findById(id);
-      done(null, user);
-    } catch (err) {
-      done(err);
-    }
-  })();
-});
-
-passport.use(
-  new LocalStrategy((username, password, done) => {
-    (async () => {
-      try {
-        const user = await User.findOne({ username });
-
-        if (user === null || user === undefined) {
-          done(null, false, { message: "Incorrect username." });
-          return;
-        }
-
-        const isMatch = await user.comparePassword(password);
-
-        if (!isMatch) {
-          done(null, false, { message: "Incorrect password." });
-          return;
-        }
-
-        done(null, user);
-      } catch (err) {
-        done(err);
-      }
-    })();
-  })
-);
-
-const ensureAuthenticated: RequestHandler = (
-  req: express.Request,
-  res: express.Response,
-  next: express.NextFunction
-) => {
-  if (req.isAuthenticated()) {
-    next();
-    return;
-  }
-  res.redirect("/login");
-};
-
-const authenticate: RequestHandler = passport.authenticate("local", {
-  successRedirect: "/dashboard",
-  failureRedirect: "/",
-  failureFlash: false,
-});
 
 app.set("view engine", "pug");
 app.set("views", path.join(__dirname, "views"));
