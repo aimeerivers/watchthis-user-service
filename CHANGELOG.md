@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.3.0](https://github.com/aimeerivers/watchthis-user-service/compare/v1.2.0...v1.3.0) (2024-03-29)
+
+
+### Features
+
+* **app:** add dev mode ([#19](https://github.com/aimeerivers/watchthis-user-service/issues/19)) ([e0ababa](https://github.com/aimeerivers/watchthis-user-service/commit/e0ababa2e0614021c5342856fa4d5db6577bac40))
+
 ## [1.2.0](https://github.com/aimeerivers/watchthis-user-service/compare/v1.1.0...v1.2.0) (2024-03-29)
 
 
