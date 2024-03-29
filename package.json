@@ -14,9 +14,11 @@
     "lint": "eslint . --ext .ts,.js --fix",
     "tidy": "npm run lint && npm run format",
     "format": "prettier --write .",
-    "build": "npx tsc",
+    "build": "tsc",
+    "build:watch": "tsc --watch",
     "start": "node dist/src/server.js",
-    "build-and-start": "npm run build && npm run start"
+    "start:watch": "nodemon dist/src/server.js",
+    "dev": "concurrently \"npm run build:watch\" \"npm run start:watch\""
   },
   "keywords": [],
   "author": "",
