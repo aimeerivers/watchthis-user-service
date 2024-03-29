@@ -1,6 +1,6 @@
 {
   "name": "watchthis-user-service",
-  "version": "1.3.0",
+  "version": "1.4.0",
   "description": "User management service for WatchThis",
   "main": "dist/src/server.js",
   "files": [
