@@ -7,6 +7,7 @@ import mongoose from "mongoose";
 import request from "supertest";
 
 import { app } from "../src/app";
+import { mongoStore } from "../src/authentication";
 import { User } from "../src/models/user";
 
 // eslint-disable-next-line @typescript-eslint/no-var-requires
@@ -149,5 +150,8 @@ describe("App", () => {
     server.close();
     await User.deleteMany({});
     mongoose.connection.close();
+    if (mongoStore !== undefined) {
+      await mongoStore.close();
+    }
   });
 });
