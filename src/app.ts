@@ -10,11 +10,11 @@ import { User } from "./models/user";
 dotenv.config();
 
 const mongoUri = process.env.MONGO_URI ?? "mongodb://localhost:27017";
-const mongoDb = process.env.MONGO_DB ?? "user-service";
-const mongoConnectionString = `${mongoUri}/${mongoDb}${process.env.NODE_ENV === "test" ? "-test" : ""}`;
+const mongoDb = process.env.MONGO_DB_USER_SERVICE ?? "user-service";
+const mongoUserService = `${mongoUri}/${mongoDb}${process.env.NODE_ENV === "test" ? "-test" : ""}`;
 
 mongoose
-  .connect(mongoConnectionString)
+  .connect(mongoUserService)
   .then(() => {
     console.log("Database connected!");
   })

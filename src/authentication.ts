@@ -1,4 +1,5 @@
 import crypto from "crypto";
+import MongoStore from "connect-mongo";
 import dotenv from "dotenv";
 import type { RequestHandler } from "express";
 import type express from "express";
@@ -10,6 +11,11 @@ import { User } from "./models/user";
 
 dotenv.config();
 
+const mongoUri = process.env.MONGO_URI ?? "mongodb://localhost:27017";
+const mongoDb = process.env.MONGO_DB_SESSION_STORE ?? "session-store";
+const mongoSessionStore = `${mongoUri}/${mongoDb}${process.env.NODE_ENV === "test" ? "-test" : ""}`;
+export const mongoStore = MongoStore.create({ mongoUrl: mongoSessionStore });
+
 const sessionSecret = process.env.SESSION_SECRET ?? crypto.randomBytes(64).toString("hex");
 
 export function applyAuthenticationMiddleware(app: express.Express): void {
@@ -18,6 +24,7 @@ export function applyAuthenticationMiddleware(app: express.Express): void {
       secret: sessionSecret,
       resave: false,
       saveUninitialized: false,
+      store: mongoStore,
     })
   );
 
