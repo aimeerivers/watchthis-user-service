@@ -140,6 +140,11 @@ describe("App", () => {
     assert.ok(res.text.includes("Hello zoe!"));
   });
 
+  it("should serve static files from the public directory", async () => {
+    const res = await request(app).get("/hello.txt");
+    assert.ok(res.text.includes("Hello!"));
+  });
+
   after(async () => {
     server.close();
     await User.deleteMany({});

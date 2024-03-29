@@ -40,7 +40,13 @@ If you want a GUI to look at the database, i recommend
 
 Visit http://localhost:8583 in your browser
 
-## Formatting code
+## Run in development mode
+
+    npm run dev
+
+This will automatically rebuild the source code and restart the server for you.
+
+## Format code
 
 The project uses ESLint and Prettier to ensure consistent coding standards.
 

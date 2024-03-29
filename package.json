@@ -4,17 +4,21 @@
   "description": "User management service for WatchThis",
   "main": "dist/src/server.js",
   "files": [
-    "dist/src"
+    "dist/src",
+    "views",
+    "public"
   ],
   "scripts": {
+    "build:watch": "tsc --watch",
+    "build": "tsc",
     "clean": "rm -rf dist",
-    "test": "npm run build && NODE_ENV=test node --test --require ts-node/register test/*.test.ts",
-    "lint": "eslint . --ext .ts,.js --fix",
-    "tidy": "npm run lint && npm run format",
+    "dev": "concurrently \"npm run build:watch\" \"npm run start:watch\"",
     "format": "prettier --write .",
-    "build": "npx tsc && mkdir -p dist/src/views && cp src/views/* dist/src/views",
+    "lint": "eslint . --ext .ts,.js --fix",
+    "start:watch": "nodemon dist/src/server.js",
     "start": "node dist/src/server.js",
-    "build-and-start": "npm run build && npm run start"
+    "test": "npm run build && NODE_ENV=test node --test --require ts-node/register test/*.test.ts",
+    "tidy": "npm run lint && npm run format"
   },
   "keywords": [],
   "author": "",
@@ -27,6 +31,7 @@
     "@types/passport": "^1.0.16",
     "@types/passport-local": "^1.0.38",
     "@types/supertest": "^6.0.2",
+    "concurrently": "^8.2.2",
     "eslint": "^8.57.0",
     "eslint-config-love": "^43.1.0",
     "eslint-config-plus-prettier": "^1.4.3",
@@ -35,6 +40,7 @@
     "eslint-plugin-prettier": "^5.1.3",
     "eslint-plugin-promise": "^6.1.1",
     "eslint-plugin-unused-imports": "^3.1.0",
+    "nodemon": "^3.1.0",
     "prettier": "^3.2.5",
     "supertest": "^6.3.4",
     "supertest-session": "^5.0.1",
@@ -42,6 +48,7 @@
     "typescript": "^5.4.3"
   },
   "dependencies": {
+    "app-root-path": "^3.1.0",
     "bcrypt": "^5.1.1",
     "dotenv": "^16.4.5",
     "express": "^4.19.2",
