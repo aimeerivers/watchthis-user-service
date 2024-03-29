@@ -1,12 +1,13 @@
-doctype html
-html
-  head
-    title Dashboard
-  body
-    h2 Dashboard
-    p Welcome, #{currentUser.username}!
-    form(action="/logout", method="POST")
-      button(type="submit") Logout 
-    ul
-      each user in users
-        li= user.username
+extends _layout
+
+block head
+  title Dashboard
+
+block body
+  h2 Dashboard
+  p Welcome, #{currentUser.username}!
+  form(action="/logout", method="POST")
+    button(type="submit") Logout 
+  ul
+    each user in users
+      li= user.username
