@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.5.0](https://github.com/aimeerivers/watchthis-user-service/compare/v1.4.0...v1.5.0) (2024-05-15)
+
+
+### Features
+
+* **views:** use a common layout for all views ([#23](https://github.com/aimeerivers/watchthis-user-service/issues/23)) ([04c50c8](https://github.com/aimeerivers/watchthis-user-service/commit/04c50c814ce6e998778cd1dc65e2e67e412afc6d))
+
 ## [1.4.0](https://github.com/aimeerivers/watchthis-user-service/compare/v1.3.0...v1.4.0) (2024-03-29)
 
 
