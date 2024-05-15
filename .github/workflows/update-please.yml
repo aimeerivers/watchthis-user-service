@@ -45,4 +45,3 @@ jobs:
           body: "Update Please has found one or more dependencies to be updated! 🚀"
           branch: update-please-${{ github.sha }}
           labels: chore
-          reviewers: aimeerivers, StaringSnake
