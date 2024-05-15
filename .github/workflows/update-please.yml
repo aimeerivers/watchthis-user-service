@@ -1,0 +1,48 @@
+name: Update please
+
+on:
+  workflow_dispatch:
+    inputs:
+      target:
+        type: choice
+        description: Target versions to upgrade to
+        required: true
+        options:
+          - latest
+          - minor
+          - patch
+  schedule:
+    - cron: "0 0 * * 1"
+
+jobs:
+  update-please:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 1
+
+      - name: Setup Node.js Environment
+        uses: actions/setup-node@v4
+
+      - name: Install npm-check-updates
+        run: npm install -g npm-check-updates
+
+      - name: Update ${{ github.event.inputs.target || 'minor' }} dependencies
+        run: ncu -t ${{ github.event.inputs.target || 'minor' }} -u
+
+      - name: Install updated dependencies
+        run: npm install
+
+      - name: Create Pull Request
+        uses: peter-evans/create-pull-request@v6
+        with:
+          token: ${{ secrets.UPDATE_PLEASE_TOKEN }}
+          commit-message: "chore(deps): update dependencies"
+          title: "chore(deps): update dependencies"
+          body: "Update Please has found one or more dependencies to be updated! 🚀"
+          branch: update-please-${{ github.sha }}
+          labels: chore
+          reviewers: aimeerivers, StaringSnake
