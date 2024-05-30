@@ -1,5 +1,5 @@
 import bcrypt from "bcrypt";
-import type { Document } from "mongoose";
+import type { Document, ObjectId } from "mongoose";
 import mongoose from "mongoose";
 
 export interface IUser extends Document {
@@ -22,7 +22,7 @@ const UserSchema = new mongoose.Schema<IUser>({
 });
 
 UserSchema.virtual("id").get(function () {
-  return this._id.toHexString();
+  return this._id as ObjectId;
 });
 
 UserSchema.set("toJSON", {
