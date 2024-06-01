@@ -1,11 +1,12 @@
-import crypto from "crypto";
 import MongoStore from "connect-mongo";
+import crypto from "crypto";
 import dotenv from "dotenv";
 import type { RequestHandler } from "express";
 import type express from "express";
 import session from "express-session";
 import passport from "passport";
 import { Strategy as LocalStrategy } from "passport-local";
+
 import type { IUser } from "./models/user";
 import { User } from "./models/user";
 

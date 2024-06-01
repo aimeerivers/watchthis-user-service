@@ -1,8 +1,8 @@
-import path from "path";
 import { path as appRootPath } from "app-root-path";
 import dotenv from "dotenv";
 import express from "express";
 import mongoose from "mongoose";
+import path from "path";
 
 import { applyAuthenticationMiddleware, authenticate, ensureAuthenticated } from "./authentication";
 import { User } from "./models/user";
