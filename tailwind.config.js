@@ -4,6 +4,7 @@ module.exports = {
     "./views/**/*.pug",
     // './src/**/*.js',
   ],
+  darkMode: "media",
   theme: {
     extend: {},
   },
