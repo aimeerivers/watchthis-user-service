@@ -50,6 +50,18 @@ input[type="submit"]:active {
   @apply bg-blue-700;
 }
 
+button.primary {
+  @apply bg-green-500;
+}
+
+button.primary:hover {
+  @apply bg-green-600;
+}
+
+button.primary:active {
+  @apply bg-green-700;
+}
+
 form {
   label {
     @apply block font-bold;
