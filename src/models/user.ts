@@ -1,6 +1,6 @@
 import bcrypt from "bcrypt";
-import type { Document, ObjectId } from "mongoose";
 import mongoose from "mongoose";
+import type { Document, ObjectId } from "mongoose";
 
 export interface IUser extends Document {
   id: string;
