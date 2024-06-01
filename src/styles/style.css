@@ -52,16 +52,21 @@ input[type="submit"]:active {
 
 form {
   label {
-    @apply block;
-    @apply mt-2;
+    @apply block font-bold;
+    @apply my-1;
   }
 
   input[type="text"],
   input[type="email"],
   input[type="password"],
   textarea {
-    @apply text-gray-900;
+    @apply bg-gray-200 text-gray-900;
     @apply p-2 rounded-md;
     @apply mb-2;
   }
+}
+
+ul {
+  @apply list-disc;
+  @apply ml-4;
 }
