@@ -33,6 +33,7 @@
     "@types/passport-local": "^1.0.38",
     "@types/supertest": "^6.0.2",
     "@typescript-eslint/parser": "^7.11.0",
+    "autoprefixer": "^10.4.19",
     "concurrently": "^8.2.2",
     "eslint-config-plus-prettier": "^1.5.2",
     "eslint-config-prettier": "^9.1.0",
@@ -41,15 +42,17 @@
     "eslint-plugin-promise": "^6.2.0",
     "eslint-plugin-simple-import-sort": "^12.1.0",
     "nodemon": "^3.1.2",
+    "postcss": "^8.4.38",
+    "postcss-cli": "^11.0.0",
     "prettier": "^3.2.5",
     "supertest": "^7.0.0",
     "supertest-session": "^5.0.1",
+    "tailwindcss": "^3.4.3",
     "ts-node": "^10.9.2",
     "typescript": "^5.4.5"
   },
   "dependencies": {
     "app-root-path": "^3.1.0",
-    "autoprefixer": "^10.4.19",
     "bcrypt": "^5.1.1",
     "connect-mongo": "^5.1.0",
     "dotenv": "^16.4.5",
@@ -58,10 +61,7 @@
     "mongoose": "^8.4.1",
     "passport": "^0.7.0",
     "passport-local": "^1.0.0",
-    "postcss": "^8.4.38",
-    "postcss-cli": "^11.0.0",
-    "pug": "^3.0.3",
-    "tailwindcss": "^3.4.3"
+    "pug": "^3.0.3"
   },
   "prettier": "eslint-config-plus-prettier/.prettierrc.json"
 }
