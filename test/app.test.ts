@@ -10,7 +10,6 @@ import { app } from "../src/app";
 import { mongoStore } from "../src/authentication";
 import { User } from "../src/models/user";
 
-// eslint-disable-next-line @typescript-eslint/no-var-requires
 const session = require("supertest-session");
 
 const port = 18583;
