@@ -1,18 +1,12 @@
-name: Run unit tests
+name: Code quality
 
 on:
   pull_request:
     branches: [main]
 
 jobs:
-  test:
+  code-quality:
     runs-on: ubuntu-latest
-
-    services:
-      mongodb:
-        image: mongo:latest
-        ports:
-          - 27017:27017
 
     steps:
       - uses: actions/checkout@v4
@@ -27,5 +21,8 @@ jobs:
       - name: Install dependencies
         run: npm install
 
-      - name: Run unit tests
-        run: npm run test
+      - name: Check linting
+        run: npm run lint:check
+
+      - name: Check formatting
+        run: npm run format:check
