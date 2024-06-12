@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.6.0](https://github.com/aimeerivers/watchthis-user-service/compare/v1.5.0...v1.6.0) (2024-06-12)
+
+
+### Features
+
+* **style:** add tailwind css and some good styles to get started ([#36](https://github.com/aimeerivers/watchthis-user-service/issues/36)) ([978870b](https://github.com/aimeerivers/watchthis-user-service/commit/978870b7bc85b27afc5a4785d8d0913db94bd5da))
+
 ## [1.5.0](https://github.com/aimeerivers/watchthis-user-service/compare/v1.4.0...v1.5.0) (2024-05-15)
 
 
