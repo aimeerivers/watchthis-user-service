@@ -6,8 +6,12 @@ block head
 block body
   h2 Dashboard
   p Welcome, #{currentUser.username}!
-  form(action="/logout", method="POST")
-    button(type="submit") Logout 
+
+  h3 Users
   ul
     each user in users
       li= user.username
+
+
+  form(action="/logout", method="POST")
+    button.w-32(type="submit") Log out
