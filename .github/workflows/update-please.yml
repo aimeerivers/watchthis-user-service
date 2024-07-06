@@ -29,10 +29,10 @@ jobs:
         run: npm install -g npm-check-updates
 
       - name: Update ${{ github.event.inputs.target || 'minor' }} dependencies
-        run: ncu -t ${{ github.event.inputs.target || 'minor' }} -u
+        run: ncu -t ${{ github.event.inputs.target || 'minor' }} -u --install always
 
-      - name: Install updated dependencies
-        run: npm install
+      - name: Audit dependencies
+        run: npm audit fix ${{ github.event.inputs.target == 'latest' && '--force' || ''}}
 
       - name: Create Pull Request
         uses: peter-evans/create-pull-request@v6
