@@ -50,5 +50,10 @@ This will automatically rebuild the source code and restart the server for you.
 
 The project uses ESLint and Prettier to ensure consistent coding standards.
 
+    npm run package:lint
     npm run lint
     npm run format
+
+- `package:lint` will ensure the `package.json` file confirms to conventions.
+- `lint` will check for errors and fix formatting in `.ts` and `.js` files.
+- `format` will apply format rules to all possible files.
