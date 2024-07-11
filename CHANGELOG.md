@@ -1,5 +1,15 @@
 # Changelog
 
+## [1.6.1](https://github.com/aimeerivers/watchthis-user-service/compare/v1.6.0...v1.6.1) (2024-07-11)
+
+
+### Miscellaneous
+
+* **deps:** update dependencies ([#40](https://github.com/aimeerivers/watchthis-user-service/issues/40)) ([05b1895](https://github.com/aimeerivers/watchthis-user-service/commit/05b18957a76706285be053da321e32b7f832c976))
+* **deps:** update dependencies ([#41](https://github.com/aimeerivers/watchthis-user-service/issues/41)) ([d09f12e](https://github.com/aimeerivers/watchthis-user-service/commit/d09f12e305deba0b5c565ba097fe2072dc5cf460))
+* **deps:** update dependencies ([#42](https://github.com/aimeerivers/watchthis-user-service/issues/42)) ([34f8510](https://github.com/aimeerivers/watchthis-user-service/commit/34f8510c9885dfc5b02a39f736e24d9e74275be0))
+* tidy package.json according to conventions ([#43](https://github.com/aimeerivers/watchthis-user-service/issues/43)) ([0ed521b](https://github.com/aimeerivers/watchthis-user-service/commit/0ed521bdd89f3578bb2455b09e88668be09129b5))
+
 ## [1.6.0](https://github.com/aimeerivers/watchthis-user-service/compare/v1.5.0...v1.6.0) (2024-06-12)
 
 
