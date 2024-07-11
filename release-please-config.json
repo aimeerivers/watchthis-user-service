@@ -1,9 +1,21 @@
 {
   "changelog-sections": [
     {
+      "type": "feat",
+      "section": "Features",
+      "hidden": false
+    },
+    {
+      "type": "fix",
+      "section": "Bug Fixes",
+      "hidden": false
+    },
+    {
       "type": "deps",
       "section": "Dependencies",
       "hidden": false
     }
-  ]
+  ],
+  "release-labels": ["autorelease: pending"],
+  "release-type": "node"
 }

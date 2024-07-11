@@ -19,3 +19,8 @@ jobs:
           token: ${{ secrets.RELEASE_PLEASE_TOKEN }}
           release-type: node
           config-file: release-please-config.json
+      - name: Debug Information
+        run: |
+          git log -10
+          echo "Config File Contents:"
+          cat release-please-config.json
