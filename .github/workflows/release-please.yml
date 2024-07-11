@@ -20,7 +20,4 @@ jobs:
           release-type: node
           config-file: release-please-config.json
       - name: Debug Information
-        run: |
-          git log -10
-          echo "Config File Contents:"
-          cat release-please-config.json
+        run: cat release-please-config.json
