@@ -1,0 +1,9 @@
+{
+  "changelog-sections": [
+    {
+      "type": "deps",
+      "section": "Dependencies",
+      "hidden": false
+    }
+  ]
+}
