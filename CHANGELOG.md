@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.6.7](https://github.com/aimeerivers/watchthis-user-service/compare/v1.6.6...v1.6.7) (2024-08-07)
+
+
+### Dependencies
+
+* update dependencies ([#67](https://github.com/aimeerivers/watchthis-user-service/issues/67)) ([eea1f91](https://github.com/aimeerivers/watchthis-user-service/commit/eea1f91f3d7872e861d12b523296180fc6931458))
+
 ## [1.6.6](https://github.com/aimeerivers/watchthis-user-service/compare/v1.6.5...v1.6.6) (2024-07-31)
 
 
