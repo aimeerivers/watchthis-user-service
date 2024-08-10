@@ -35,4 +35,4 @@ jobs:
           REMOTE_URL: ${{ vars.SCALINGO_GIT_URL }}
         run: |
           git remote add scalingo $REMOTE_URL
-          git push scalingo main:refs/heads/main
+          git push scalingo HEAD:refs/heads/main
