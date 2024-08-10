@@ -27,6 +27,9 @@ export function applyAuthenticationMiddleware(app: express.Express): void {
       resave: false,
       saveUninitialized: false,
       store: mongoStore,
+      cookie: {
+        domain: baseUrl.hostname.split(".").slice(1).join("."),
+      },
     })
   );
 
