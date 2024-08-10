@@ -1,3 +1,4 @@
+import flash from "connect-flash";
 import MongoStore from "connect-mongo";
 import crypto from "crypto";
 import dotenv from "dotenv";
@@ -28,6 +29,7 @@ export function applyAuthenticationMiddleware(app: express.Express): void {
     })
   );
 
+  app.use(flash());
   app.use(passport.initialize());
   app.use(passport.session());
 
@@ -87,6 +89,6 @@ export const ensureAuthenticated: RequestHandler = (
 
 export const authenticate: RequestHandler = passport.authenticate("local", {
   successRedirect: "/dashboard",
-  failureRedirect: "/",
-  failureFlash: false,
+  failureRedirect: "/login",
+  failureFlash: true,
 });
