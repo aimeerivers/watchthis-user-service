@@ -28,7 +28,6 @@ export function applyAuthenticationMiddleware(app: express.Express): void {
       saveUninitialized: false,
       store: mongoStore,
       cookie: {
-        domain: "",
         secure: baseUrl.protocol === "https:",
         sameSite: "lax",
         httpOnly: true,
