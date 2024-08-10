@@ -19,6 +19,11 @@ jobs:
           mkdir -p ~/.ssh
           ssh-keyscan -H ssh.osc-fr1.scalingo.com >> ~/.ssh/known_hosts
 
+      - name: Add Scalingo SSH private key
+        run: |
+          echo "${{ secrets.SCALINGO_PRIVATE_KEY }}" > ~/.ssh/id_ed25519
+          chmod 600 ~/.ssh/id_ed25519
+
       - name: Push to Scalingo
         env:
           GITHUB_TOKEN: ${{ secrets.DEPLOY_PLEASE_TOKEN }}
