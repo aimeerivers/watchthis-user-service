@@ -91,5 +91,5 @@ export const ensureAuthenticated: RequestHandler = (
 export const authenticate: RequestHandler = passport.authenticate("local", {
   successRedirect: "/dashboard",
   failureRedirect: "/login",
-  failureFlash: false,
+  failureFlash: true,
 });

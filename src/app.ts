@@ -59,7 +59,8 @@ app.post("/signup", (req, res) => {
 });
 
 app.get("/login", (req, res) => {
-  res.render("login");
+  const messages = req.flash("error");
+  res.render("login", { messages });
 });
 
 app.post("/login", authenticate);

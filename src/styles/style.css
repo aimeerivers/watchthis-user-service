@@ -82,3 +82,23 @@ ul {
   @apply list-disc;
   @apply ml-4;
 }
+
+.alert {
+  @apply px-4 py-3 rounded-md mb-4;
+}
+
+.alert-info {
+  @apply bg-blue-100 border-t-4 border-blue-500 text-blue-900;
+}
+
+.alert-success {
+  @apply bg-green-100 border-t-4 border-green-500 text-green-900;
+}
+
+.alert-warning {
+  @apply bg-yellow-100 border-t-4 border-yellow-500 text-yellow-900;
+}
+
+.alert-error {
+  @apply bg-red-100 border-t-4 border-red-500 text-red-900;
+}
