@@ -27,12 +27,6 @@ export function applyAuthenticationMiddleware(app: express.Express): void {
       resave: false,
       saveUninitialized: false,
       store: mongoStore,
-      cookie: {
-        secure: baseUrl.protocol === "https:",
-        sameSite: "lax",
-        httpOnly: true,
-        maxAge: 1000 * 60 * 60 * 24 * 7, // 1 week
-      },
     })
   );
 
@@ -114,7 +108,6 @@ export function applyAuthenticationMiddleware(app: express.Express): void {
           sessionId: sessionId,
           domain: session.cookie.domain,
           path: session.cookie.path,
-          expiresAt: session.cookie.expires,
           user: {
             _id: user._id,
             username: user.username,

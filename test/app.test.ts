@@ -170,7 +170,6 @@ describe("App", () => {
         assert.equal(res.statusCode, 200);
         const responseBody = JSON.parse(res.text);
         assert(responseBody.sessionId);
-        assert(responseBody.expiresAt);
         assert(responseBody.user);
         assert.equal(responseBody.user.username, username);
       });
