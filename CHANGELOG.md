@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.8.1](https://github.com/aimeerivers/watchthis-user-service/compare/v1.8.0...v1.8.1) (2024-08-10)
+
+
+### Bug Fixes
+
+* **session:** set the session cookie properly ([be7c6d3](https://github.com/aimeerivers/watchthis-user-service/commit/be7c6d30cac960a06cf9700212fd6810c8601b03))
+
 ## [1.8.0](https://github.com/aimeerivers/watchthis-user-service/compare/v1.7.2...v1.8.0) (2024-08-10)
 
 
