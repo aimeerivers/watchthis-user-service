@@ -9,9 +9,8 @@ import { User } from "./models/user";
 
 dotenv.config();
 
-const mongoUri = process.env.MONGO_URI ?? "mongodb://localhost:27017";
-const mongoDb = process.env.MONGO_DB_USER_SERVICE ?? "user-service";
-const mongoUserService = `${mongoUri}/${mongoDb}${process.env.NODE_ENV === "test" ? "-test" : ""}`;
+const mongoUrl = process.env.MONGO_URL ?? "mongodb://localhost:27017/user-service";
+const mongoUserService = `${mongoUrl}${process.env.NODE_ENV === "test" ? "-test" : ""}`;
 
 mongoose
   .connect(mongoUserService)
