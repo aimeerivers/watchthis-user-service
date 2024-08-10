@@ -17,6 +17,7 @@ const mongoUrl = process.env.MONGO_URL ?? "mongodb://localhost:27017/user-servic
 const mongoSessionStore = `${mongoUrl}${process.env.NODE_ENV === "test" ? "-test" : ""}`;
 export const mongoStore = MongoStore.create({ mongoUrl: mongoSessionStore });
 
+const baseUrl = new URL(process.env.BASE_URL ?? "http://localhost:8583");
 const sessionSecret = process.env.SESSION_SECRET ?? crypto.randomBytes(64).toString("hex");
 
 export function applyAuthenticationMiddleware(app: express.Express): void {
@@ -26,6 +27,13 @@ export function applyAuthenticationMiddleware(app: express.Express): void {
       resave: false,
       saveUninitialized: false,
       store: mongoStore,
+      cookie: {
+        domain: baseUrl.hostname.split(".").slice(1).join("."),
+        secure: baseUrl.protocol === "https:",
+        sameSite: "lax",
+        httpOnly: true,
+        maxAge: 1000 * 60 * 60 * 24 * 7, // 1 week
+      },
     })
   );
 
