@@ -68,13 +68,13 @@ describe("App", () => {
     it("should not be able to log in with incorrect password", async () => {
       const res = await request(app).post("/login").type("form").send({ username, password: "wrongpassword" });
       assert.equal(res.statusCode, 302);
-      assert.equal(res.headers.location, "/");
+      assert.equal(res.headers.location, "/login");
     });
 
     it("should not be able to log in with invalid username", async () => {
       const res = await request(app).post("/login").type("form").send({ username: "invalidusername", password });
       assert.equal(res.statusCode, 302);
-      assert.equal(res.headers.location, "/");
+      assert.equal(res.headers.location, "/login");
     });
   });
 
