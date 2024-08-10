@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.7.2](https://github.com/aimeerivers/watchthis-user-service/compare/v1.7.1...v1.7.2) (2024-08-10)
+
+
+### Bug Fixes
+
+* **workflows:** push currently checkout out branch to main branch of scalingo ([a59e0f0](https://github.com/aimeerivers/watchthis-user-service/commit/a59e0f0923a4dc75d771239a84f421c64f43d595))
+
 ## [1.7.1](https://github.com/aimeerivers/watchthis-user-service/compare/v1.7.0...v1.7.1) (2024-08-10)
 
 
