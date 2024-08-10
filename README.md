@@ -6,8 +6,9 @@ User management service for WatchThis
 
 Add a `.env` file and add some environment variables:
 
-    MONGO_URI=mongodb://localhost:27017
-    MONGO_DB=user-service
+    BASE_URL=http://localhost:8583
+    MONGO_URL=mongodb://localhost:27017/user-service
+    SESSION_SECRET=verysecret
 
 Install npm dependencies
 
