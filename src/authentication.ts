@@ -12,9 +12,9 @@ import { User } from "./models/user";
 
 dotenv.config();
 
-const mongoUri = process.env.MONGO_URI ?? "mongodb://localhost:27017";
+const mongoUrl = process.env.MONGO_URL ?? "mongodb://localhost:27017";
 const mongoDb = process.env.MONGO_DB_SESSION_STORE ?? "session-store";
-const mongoSessionStore = `${mongoUri}/${mongoDb}${process.env.NODE_ENV === "test" ? "-test" : ""}`;
+const mongoSessionStore = `${mongoUrl}/${mongoDb}${process.env.NODE_ENV === "test" ? "-test" : ""}`;
 export const mongoStore = MongoStore.create({ mongoUrl: mongoSessionStore });
 
 const sessionSecret = process.env.SESSION_SECRET ?? crypto.randomBytes(64).toString("hex");
