@@ -81,6 +81,51 @@ export function applyAuthenticationMiddleware(app: express.Express): void {
       })();
     })
   );
+
+  app.get("/api/v1/session", (req, res) => {
+    const connectSid = req.headers.cookie?.split(";").find((cookie) => cookie.includes("connect.sid"));
+    if (!connectSid) {
+      return res.status(400).json({ error: "Passport session cookie not found" });
+    }
+
+    const sessionId = decodeURIComponent(connectSid)
+      .replace(/^connect\.sid=s:/, "")
+      .split(".")[0];
+    if (!sessionId) {
+      return res.status(400).json({ error: "Passport session ID not found" });
+    }
+
+    mongoStore.get(sessionId, async (err, session) => {
+      if (err || !session) {
+        return res.status(401).json({ error: "Invalid or expired session" });
+      }
+
+      const userId = (session as any).passport?.user;
+      if (!userId) {
+        return res.status(401).json({ error: "Invalid or expired session" });
+      }
+
+      try {
+        const user = await User.findById(userId).exec();
+        if (!user) {
+          return res.status(404).json({ error: "User not found" });
+        }
+
+        res.json({
+          sessionId: sessionId,
+          domain: session.cookie.domain,
+          path: session.cookie.path,
+          expiresAt: session.cookie.expires,
+          user: {
+            _id: user._id,
+            username: user.username,
+          },
+        });
+      } catch (error) {
+        res.status(500).json({ error: "Internal server error" });
+      }
+    });
+  });
 }
 
 export const ensureAuthenticated: RequestHandler = (
