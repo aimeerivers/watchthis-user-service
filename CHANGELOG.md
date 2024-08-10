@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.7.0](https://github.com/aimeerivers/watchthis-user-service/compare/v1.6.7...v1.7.0) (2024-08-10)
+
+
+### Features
+
+* **login:** display feedback when login is unsuccessful ([#69](https://github.com/aimeerivers/watchthis-user-service/issues/69)) ([fc3225f](https://github.com/aimeerivers/watchthis-user-service/commit/fc3225f3928743af1ce997fa689cc94def4f378e))
+
 ## [1.6.7](https://github.com/aimeerivers/watchthis-user-service/compare/v1.6.6...v1.6.7) (2024-08-07)
 
 
