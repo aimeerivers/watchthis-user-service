@@ -1,3 +1,4 @@
+import flash from "connect-flash";
 import MongoStore from "connect-mongo";
 import crypto from "crypto";
 import dotenv from "dotenv";
@@ -29,6 +30,7 @@ export function applyAuthenticationMiddleware(app: express.Express): void {
     })
   );
 
+  app.use(flash());
   app.use(passport.initialize());
   app.use(passport.session());
 
