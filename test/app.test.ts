@@ -145,6 +145,46 @@ describe("App", () => {
     assert.ok(res.text.includes("Hello!"));
   });
 
+  describe("API", () => {
+    describe("Session", () => {
+      let testSession: request.SuperTest<request.Test>;
+      let username: string;
+      let password: string;
+      let sid: string;
+
+      before(async () => {
+        testSession = session(app);
+        username = faker.internet.userName();
+        password = faker.internet.password();
+
+        const user = new User({
+          username,
+          password,
+        });
+        await user.save();
+        await testSession.post("/login").type("form").send({ username, password });
+      });
+
+      it("should report session details", async () => {
+        const res = await testSession.get("/api/v1/session");
+        assert.equal(res.statusCode, 200);
+        const responseBody = JSON.parse(res.text);
+        assert(responseBody.sessionId);
+        assert(responseBody.expiresAt);
+        assert(responseBody.user);
+        assert.equal(responseBody.user.username, username);
+      });
+
+      it("should not report session details after user has logged out", async () => {
+        await testSession.post("/logout");
+        const res = await testSession.get("/api/v1/session");
+        assert.equal(res.statusCode, 401);
+        const responseBody = JSON.parse(res.text);
+        assert.equal(responseBody.error, "Invalid or expired session");
+      });
+    });
+  });
+
   after(async () => {
     server.close();
     await User.deleteMany({});
