@@ -1,5 +1,17 @@
 # Changelog
 
+## [1.8.0](https://github.com/aimeerivers/watchthis-user-service/compare/v1.7.2...v1.8.0) (2024-08-10)
+
+
+### Features
+
+* **session:** add a session API endpoint ([#79](https://github.com/aimeerivers/watchthis-user-service/issues/79)) ([f3491c6](https://github.com/aimeerivers/watchthis-user-service/commit/f3491c654b87055968b3b80a41f9ebccbb4a952c))
+
+
+### Dependencies
+
+* update dependencies ([#80](https://github.com/aimeerivers/watchthis-user-service/issues/80)) ([968595c](https://github.com/aimeerivers/watchthis-user-service/commit/968595cdee949ba06a853c695016ef04d8670953))
+
 ## [1.7.2](https://github.com/aimeerivers/watchthis-user-service/compare/v1.7.1...v1.7.2) (2024-08-10)
 
 
