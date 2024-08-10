@@ -14,6 +14,11 @@ jobs:
           git config --global user.name "github-actions[bot]"
           git config --global user.email "github-actions[bot]@users.noreply.github.com"
 
+      - name: Add Scalingo SSH key to known hosts
+        run: |
+          mkdir -p ~/.ssh
+          ssh-keyscan -H ssh.osc-fr1.scalingo.com >> ~/.ssh/known_hosts
+
       - name: Push to Scalingo
         env:
           GITHUB_TOKEN: ${{ secrets.DEPLOY_PLEASE_TOKEN }}
