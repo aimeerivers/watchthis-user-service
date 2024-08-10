@@ -12,7 +12,7 @@ jobs:
     steps:
       - uses: actions/checkout@v4
         with:
-          fetch-depth: 0 # Scalingo needs it all
+          fetch-depth: 0
 
       - name: Set up Git
         run: |
@@ -35,4 +35,4 @@ jobs:
           REMOTE_URL: ${{ vars.SCALINGO_GIT_URL }}
         run: |
           git remote add scalingo $REMOTE_URL
-          git push scalingo HEAD:refs/heads/$(git rev-parse --abbrev-ref HEAD)
+          git push scalingo main:refs/heads/main
