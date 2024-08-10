@@ -179,7 +179,8 @@ describe("App", () => {
         await testSession.post("/logout");
         const res = await testSession.get("/api/v1/session");
         assert.equal(res.statusCode, 401);
-        assert.equal(res.text, '{"error":"Invalid or expired session"}');
+        const responseBody = JSON.parse(res.text);
+        assert.equal(responseBody.error, "Invalid or expired session");
       });
     });
   });
