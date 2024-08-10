@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.7.1](https://github.com/aimeerivers/watchthis-user-service/compare/v1.7.0...v1.7.1) (2024-08-10)
+
+
+### Bug Fixes
+
+* **workflows:** ensure it is always the main branch that gets pushed to scalingo ([#76](https://github.com/aimeerivers/watchthis-user-service/issues/76)) ([d595410](https://github.com/aimeerivers/watchthis-user-service/commit/d595410ada9f04dcb54610076f63c5326a79b6fc))
+
 ## [1.7.0](https://github.com/aimeerivers/watchthis-user-service/compare/v1.6.7...v1.7.0) (2024-08-10)
 
 
