@@ -7,7 +7,7 @@ import mongoose from "mongoose";
 import request from "supertest";
 
 import { app } from "../src/app";
-import { mongoStore } from "../src/authentication";
+import { mongoStore } from "../src/auth";
 import { User } from "../src/models/user";
 
 const session = require("supertest-session");

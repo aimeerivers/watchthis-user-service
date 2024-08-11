@@ -4,7 +4,7 @@ import express from "express";
 import mongoose from "mongoose";
 import path from "path";
 
-import { applyAuthenticationMiddleware, authenticate, ensureAuthenticated } from "./authentication";
+import { applyAuthenticationMiddleware, authenticate, ensureAuthenticated } from "./auth";
 import { User } from "./models/user";
 
 dotenv.config();
