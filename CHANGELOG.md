@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.9.0](https://github.com/aimeerivers/watchthis-user-service/compare/v1.8.1...v1.9.0) (2024-08-11)
+
+
+### Features
+
+* **auth:** handle returning to callbackUrls when they are set ([#84](https://github.com/aimeerivers/watchthis-user-service/issues/84)) ([a535d96](https://github.com/aimeerivers/watchthis-user-service/commit/a535d962248ebdc6a8b9151120712f2d8e8dbadd))
+
 ## [1.8.1](https://github.com/aimeerivers/watchthis-user-service/compare/v1.8.0...v1.8.1) (2024-08-10)
 
 
