@@ -11,6 +11,8 @@ block body
       div.alert.alert-error= message
 
   form#login-form(action='/login' method='POST')
+    if callbackUrl
+      input(type='hidden' name='callbackUrl' value=callbackUrl)
     label(for='username') Username:
     input#username(type='text' name='username' required autofocus)
     br

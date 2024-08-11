@@ -5,7 +5,9 @@ block head
 
 block body
   h2 Sign up
-  form#signup-form(action='/signup' method='post')
+  form#signup-form(action='/signup' method='POST')
+    if callbackUrl
+      input(type='hidden' name='callbackUrl' value=callbackUrl)
     label(for='username') Username:
     input#username(type='text' name='username' required autofocus)
     br

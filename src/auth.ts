@@ -135,8 +135,10 @@ export const ensureAuthenticated: RequestHandler = (
   res.redirect("/login");
 };
 
-export const authenticate: RequestHandler = passport.authenticate("local", {
-  successRedirect: "/dashboard",
-  failureRedirect: "/login",
-  failureFlash: true,
-});
+export const authenticate: RequestHandler = (req, res, next) => {
+  passport.authenticate("local", {
+    successRedirect: req.body.callbackUrl ?? "/dashboard",
+    failureRedirect: "/login",
+    failureFlash: true,
+  })(req, res, next);
+};
