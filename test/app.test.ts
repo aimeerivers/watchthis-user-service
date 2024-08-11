@@ -198,7 +198,6 @@ describe("App", () => {
       let testSession: request.SuperTest<request.Test>;
       let username: string;
       let password: string;
-      let sid: string;
 
       before(async () => {
         testSession = session(app);
