@@ -7,7 +7,7 @@ import mongoose from "mongoose";
 import request from "supertest";
 
 import { app } from "../src/app";
-import { mongoStore } from "../src/authentication";
+import { mongoStore } from "../src/auth";
 import { User } from "../src/models/user";
 
 const session = require("supertest-session");
@@ -27,13 +27,22 @@ describe("App", () => {
     });
   });
 
-  describe("Sign up", () => {
+  describe("Sign up page", () => {
     it("should render the signup page", async () => {
       const res = await request(app).get("/signup");
       assert.equal(res.statusCode, 200);
       assert.ok(res.text.includes("form"));
     });
 
+    it("should include a callbackUrl if one is set", async () => {
+      const callbackUrl = "/test";
+      const res = await request(app).get("/signup").query({ callbackUrl });
+      assert.equal(res.statusCode, 200);
+      assert.ok(res.text.includes(`<input type="hidden" name="callbackUrl" value="${callbackUrl}">`));
+    });
+  });
+
+  describe("Sign up", () => {
     it("should create a user and redirect to the dashboard", async () => {
       const res = await request(app)
         .post("/signup")
@@ -41,6 +50,31 @@ describe("App", () => {
         .send({ username: faker.internet.userName(), password: faker.internet.password() });
       assert.equal(res.statusCode, 302);
       assert.equal(res.headers.location, "/dashboard");
+    });
+
+    it("should redirect to the callbackUrl if one is set", async () => {
+      const callbackUrl = "/test";
+      const res = await request(app)
+        .post("/signup")
+        .type("form")
+        .send({ username: faker.internet.userName(), password: faker.internet.password(), callbackUrl });
+      assert.equal(res.statusCode, 302);
+      assert.equal(res.headers.location, callbackUrl);
+    });
+  });
+
+  describe("Log in page", () => {
+    it("should render the login page", async () => {
+      const res = await request(app).get("/login");
+      assert.equal(res.statusCode, 200);
+      assert.ok(res.text.includes("form"));
+    });
+
+    it("should include a callbackUrl if one is set", async () => {
+      const callbackUrl = "/test";
+      const res = await request(app).get("/login").query({ callbackUrl });
+      assert.equal(res.statusCode, 200);
+      assert.ok(res.text.includes(`<input type="hidden" name="callbackUrl" value="${callbackUrl}">`));
     });
   });
 
@@ -63,6 +97,13 @@ describe("App", () => {
       const res = await request(app).post("/login").type("form").send({ username, password });
       assert.equal(res.statusCode, 302);
       assert.equal(res.headers.location, "/dashboard");
+    });
+
+    it("should redirect to the callbackUrl if one is set", async () => {
+      const callbackUrl = "/test";
+      const res = await request(app).post("/login").type("form").send({ username, password, callbackUrl });
+      assert.equal(res.statusCode, 302);
+      assert.equal(res.headers.location, callbackUrl);
     });
 
     it("should not be able to log in with incorrect password", async () => {
@@ -113,6 +154,13 @@ describe("App", () => {
       assert.equal(res.statusCode, 302);
       assert.equal(res.headers.location, "/login");
     });
+
+    it("should redirect to the callbackUrl if one is set", async () => {
+      const callbackUrl = "/test";
+      const res = await testSession.post("/logout").type("form").send({ callbackUrl });
+      assert.equal(res.statusCode, 302);
+      assert.equal(res.headers.location, callbackUrl);
+    });
   });
 
   it("should show the welcome page", async () => {
@@ -150,7 +198,6 @@ describe("App", () => {
       let testSession: request.SuperTest<request.Test>;
       let username: string;
       let password: string;
-      let sid: string;
 
       before(async () => {
         testSession = session(app);

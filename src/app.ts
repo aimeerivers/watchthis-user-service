@@ -4,7 +4,7 @@ import express from "express";
 import mongoose from "mongoose";
 import path from "path";
 
-import { applyAuthenticationMiddleware, authenticate, ensureAuthenticated } from "./authentication";
+import { applyAuthenticationMiddleware, authenticate, ensureAuthenticated } from "./auth";
 import { User } from "./models/user";
 
 dotenv.config();
@@ -31,8 +31,8 @@ app.set("view engine", "pug");
 app.set("views", path.join(appRootPath, "views"));
 app.use(express.static(path.join(appRootPath, "public")));
 
-app.get("/signup", (_req, res) => {
-  res.render("signup");
+app.get("/signup", (req, res) => {
+  res.render("signup", { callbackUrl: req.query.callbackUrl });
 });
 
 app.post("/signup", (req, res) => {
@@ -49,7 +49,7 @@ app.post("/signup", (req, res) => {
           console.log(err);
           return res.status(500).send();
         }
-        res.redirect("/dashboard");
+        res.redirect(req.body.callbackUrl ?? "/dashboard");
       });
     } catch {
       res.status(500).send("YOU IDIOT THATS TAKEN!");
@@ -59,7 +59,7 @@ app.post("/signup", (req, res) => {
 
 app.get("/login", (req, res) => {
   const messages = req.flash("error");
-  res.render("login", { messages });
+  res.render("login", { messages, callbackUrl: req.query.callbackUrl });
 });
 
 app.post("/login", authenticate);
@@ -83,7 +83,7 @@ app.post("/logout", (req, res) => {
       return res.status(500).send("An error occurred while logging out");
     }
     // Redirect or respond as needed if logout is successful
-    res.redirect("/");
+    res.redirect(req.body.callbackUrl ?? "/");
   });
 });
 
