@@ -36,7 +36,7 @@
     "dotenv": "16.4.5",
     "express": "4.19.2",
     "express-session": "1.18.0",
-    "mongoose": "8.5.2",
+    "mongoose": "8.5.3",
     "passport": "0.7.0",
     "passport-local": "1.0.0",
     "pug": "3.0.3"
@@ -60,7 +60,7 @@
     "postcss-minify": "1.1.0",
     "supertest": "7.0.0",
     "supertest-session": "5.0.1",
-    "tailwindcss": "3.4.9",
+    "tailwindcss": "3.4.10",
     "ts-node": "10.9.2",
     "typescript": "5.5.4"
   },
