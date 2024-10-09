@@ -34,8 +34,8 @@
     "connect-flash": "0.1.1",
     "connect-mongo": "5.1.0",
     "dotenv": "16.4.5",
-    "express": "4.21.0",
-    "express-session": "1.18.0",
+    "express": "4.21.1",
+    "express-session": "1.18.1",
     "mongoose": "8.7.0",
     "passport": "0.7.0",
     "passport-local": "1.0.0",
@@ -52,7 +52,7 @@
     "@types/supertest": "6.0.2",
     "autoprefixer": "10.4.20",
     "concurrently": "8.2.2",
-    "eslint-config-plus-prettier": "1.5.13",
+    "eslint-config-plus-prettier": "1.5.14",
     "nodemon": "3.1.7",
     "npm-package-json-lint": "8.0.0",
     "postcss": "8.4.47",
@@ -62,7 +62,7 @@
     "supertest-session": "5.0.1",
     "tailwindcss": "3.4.13",
     "ts-node": "10.9.2",
-    "typescript": "5.6.2"
+    "typescript": "5.6.3"
   },
   "prettier": "eslint-config-plus-prettier/.prettierrc.json"
 }
