@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.9.11](https://github.com/aimeerivers/watchthis-user-service/compare/v1.9.10...v1.9.11) (2024-10-30)
+
+
+### Dependencies
+
+* update dependencies ([#106](https://github.com/aimeerivers/watchthis-user-service/issues/106)) ([c9b71bf](https://github.com/aimeerivers/watchthis-user-service/commit/c9b71bf19fe15b3120ef375c998b16db9dc33c98))
+
 ## [1.9.10](https://github.com/aimeerivers/watchthis-user-service/compare/v1.9.9...v1.9.10) (2024-10-23)
 
 
