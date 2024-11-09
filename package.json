@@ -52,7 +52,7 @@
     "@types/supertest": "6.0.2",
     "autoprefixer": "10.4.20",
     "concurrently": "8.2.2",
-    "eslint-config-plus-prettier": "1.5.18",
+    "eslint-config-plus-prettier": "1.7.1",
     "nodemon": "3.1.7",
     "npm-package-json-lint": "8.0.0",
     "postcss": "8.4.47",
