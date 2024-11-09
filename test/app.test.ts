@@ -4,13 +4,12 @@ import { after, before, describe, it } from "node:test";
 
 import { faker } from "@faker-js/faker";
 import mongoose from "mongoose";
-import request from "supertest";
+import request, { SuperTest, Test } from "supertest";
+import session from "supertest-session";
 
-import { app } from "../src/app";
-import { mongoStore } from "../src/auth";
-import { User } from "../src/models/user";
-
-const session = require("supertest-session");
+import { app } from "../src/app.js";
+import { mongoStore } from "../src/auth.js";
+import { User } from "../src/models/user.js";
 
 const port = 18583;
 let server: Server;
@@ -120,7 +119,7 @@ describe("App", () => {
   });
 
   describe("Log out", () => {
-    let testSession: request.SuperTest<request.Test>;
+    let testSession: SuperTest<Test>;
     let username: string;
     let password: string;
 
@@ -163,6 +162,13 @@ describe("App", () => {
     });
   });
 
+  describe("Ping", () => {
+    it("should respond to a ping", async () => {
+      const res = await request(app).get("/ping");
+      assert.equal(res.statusCode, 200);
+    });
+  });
+
   it("should show the welcome page", async () => {
     const res = await request(app).get("/");
     assert.ok(res.text.includes("Welcome to Watch This!"));
@@ -195,7 +201,7 @@ describe("App", () => {
 
   describe("API", () => {
     describe("Session", () => {
-      let testSession: request.SuperTest<request.Test>;
+      let testSession: SuperTest<Test>;
       let username: string;
       let password: string;
 

@@ -1,11 +1,12 @@
-import { path as appRootPath } from "app-root-path";
+import appRootPath from "app-root-path";
 import dotenv from "dotenv";
 import express from "express";
 import mongoose from "mongoose";
 import path from "path";
 
-import { applyAuthenticationMiddleware, authenticate, ensureAuthenticated } from "./auth";
-import { User } from "./models/user";
+import packageJson from "../package.json" with { type: "json" };
+import { applyAuthenticationMiddleware, authenticate, ensureAuthenticated } from "./auth.js";
+import { User } from "./models/user.js";
 
 dotenv.config();
 
@@ -28,8 +29,8 @@ applyAuthenticationMiddleware(app);
 app.use(express.urlencoded({ extended: true }));
 
 app.set("view engine", "pug");
-app.set("views", path.join(appRootPath, "views"));
-app.use(express.static(path.join(appRootPath, "public")));
+app.set("views", path.join(appRootPath.path, "views"));
+app.use(express.static(path.join(appRootPath.path, "public")));
 
 app.get("/signup", (req, res) => {
   res.render("signup", { callbackUrl: req.query.callbackUrl });
@@ -97,6 +98,10 @@ app.post("/andre", (_req, res) => {
 
 app.get("/hello/:name", (req, res) => {
   res.send(`Hello ${req.params.name}!`);
+});
+
+app.get("/ping", (_req, res) => {
+  res.send(`${packageJson.name} ${packageJson.version}`);
 });
 
 export { app };

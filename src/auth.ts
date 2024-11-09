@@ -8,8 +8,8 @@ import session from "express-session";
 import passport from "passport";
 import { Strategy as LocalStrategy } from "passport-local";
 
-import type { IUser } from "./models/user";
-import { User } from "./models/user";
+import type { IUser } from "./models/user.js";
+import { User } from "./models/user.js";
 
 dotenv.config();
 
