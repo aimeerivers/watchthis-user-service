@@ -1,5 +1,12 @@
 # Changelog
 
+## [2.0.1](https://github.com/aimeerivers/watchthis-user-service/compare/v2.0.0...v2.0.1) (2024-11-09)
+
+
+### Dependencies
+
+* Update eslint-config-plus-prettier ([#112](https://github.com/aimeerivers/watchthis-user-service/issues/112)) ([81e0781](https://github.com/aimeerivers/watchthis-user-service/commit/81e078166131c44c8a18e5314ce4d97108748418))
+
 ## [2.0.0](https://github.com/aimeerivers/watchthis-user-service/compare/v1.9.12...v2.0.0) (2024-11-09)
 
 
