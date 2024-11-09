@@ -7,6 +7,8 @@ import path from "path";
 import { applyAuthenticationMiddleware, authenticate, ensureAuthenticated } from "./auth.js";
 import { User } from "./models/user.js";
 
+import packageJson from "../package.json" with { type: "json" };
+
 dotenv.config();
 
 const mongoUrl = process.env.MONGO_URL ?? "mongodb://localhost:27017/user-service";
@@ -97,6 +99,10 @@ app.post("/andre", (_req, res) => {
 
 app.get("/hello/:name", (req, res) => {
   res.send(`Hello ${req.params.name}!`);
+});
+
+app.get("/ping", (_req, res) => {
+  res.send(`${packageJson.name} ${packageJson.version}`);
 });
 
 export { app };
