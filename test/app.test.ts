@@ -46,7 +46,7 @@ describe("App", () => {
       const res = await request(app)
         .post("/signup")
         .type("form")
-        .send({ username: faker.internet.userName(), password: faker.internet.password() });
+        .send({ username: faker.internet.username(), password: faker.internet.password() });
       assert.equal(res.statusCode, 302);
       assert.equal(res.headers.location, "/dashboard");
     });
@@ -56,7 +56,7 @@ describe("App", () => {
       const res = await request(app)
         .post("/signup")
         .type("form")
-        .send({ username: faker.internet.userName(), password: faker.internet.password(), callbackUrl });
+        .send({ username: faker.internet.username(), password: faker.internet.password(), callbackUrl });
       assert.equal(res.statusCode, 302);
       assert.equal(res.headers.location, callbackUrl);
     });
@@ -82,7 +82,7 @@ describe("App", () => {
     let password: string;
 
     before(async () => {
-      username = faker.internet.userName();
+      username = faker.internet.username();
       password = faker.internet.password();
 
       const user = new User({
@@ -125,7 +125,7 @@ describe("App", () => {
 
     before(async () => {
       testSession = session(app);
-      username = faker.internet.userName();
+      username = faker.internet.username();
       password = faker.internet.password();
 
       const user = new User({
@@ -207,7 +207,7 @@ describe("App", () => {
 
       before(async () => {
         testSession = session(app);
-        username = faker.internet.userName();
+        username = faker.internet.username();
         password = faker.internet.password();
 
         const user = new User({
