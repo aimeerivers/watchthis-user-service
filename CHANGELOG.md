@@ -1,5 +1,16 @@
 # Changelog
 
+## [2.0.0](https://github.com/aimeerivers/watchthis-user-service/compare/v1.9.12...v2.0.0) (2024-11-09)
+
+
+### ⚠ BREAKING CHANGES
+
+* CommonJS `require` importing is no longer supported in this project.
+
+### Features
+
+* Convert to ES module ([#110](https://github.com/aimeerivers/watchthis-user-service/issues/110)) ([aa59357](https://github.com/aimeerivers/watchthis-user-service/commit/aa593571ca905fd3f7b82efcd51a10cb4eba1518))
+
 ## [1.9.12](https://github.com/aimeerivers/watchthis-user-service/compare/v1.9.11...v1.9.12) (2024-11-06)
 
 
