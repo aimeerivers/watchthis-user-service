@@ -4,10 +4,9 @@ import express from "express";
 import mongoose from "mongoose";
 import path from "path";
 
+import packageJson from "../package.json" with { type: "json" };
 import { applyAuthenticationMiddleware, authenticate, ensureAuthenticated } from "./auth.js";
 import { User } from "./models/user.js";
-
-import packageJson from "../package.json" with { type: "json" };
 
 dotenv.config();
 
