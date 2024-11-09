@@ -1,14 +1,7 @@
 {
+  "extends": "eslint-config-plus-prettier/.npmpackagejsonlintrc.json",
   "rules": {
     "no-caret-version-dependencies": "error",
-    "no-caret-version-devDependencies": "error",
-    "no-duplicate-properties": "error",
-    "no-repeated-dependencies": "error",
-    "no-tilde-version-dependencies": "error",
-    "no-tilde-version-devDependencies": "error",
-    "prefer-alphabetical-dependencies": "error",
-    "prefer-alphabetical-devDependencies": "error",
-    "prefer-alphabetical-scripts": "error",
-    "prefer-property-order": ["error", []]
+    "prefer-caret-version-dependencies": "off"
   }
 }
