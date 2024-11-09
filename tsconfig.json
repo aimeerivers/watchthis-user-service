@@ -2,6 +2,9 @@
   "extends": "eslint-config-plus-prettier/tsconfig.json",
   "include": ["src", "test"],
   "compilerOptions": {
-    "outDir": "dist"
+    "outDir": "dist",
+    "target": "ES2022",
+    "module": "ES2022",
+    "typeRoots": ["./node_modules/@types", "./test/types"]
   }
 }

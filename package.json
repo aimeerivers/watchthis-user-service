@@ -11,6 +11,7 @@
     "views"
   ],
   "main": "dist/src/server.js",
+  "type": "module",
   "scripts": {
     "build": "tsc",
     "build:watch": "tsc --watch",
@@ -25,7 +26,7 @@
     "start:watch": "nodemon dist/src/server.js",
     "tailwind:css": "postcss src/styles/style.css -o public/styles/style.css",
     "tailwind:css:watch": "postcss src/styles/style.css -o public/styles/style.css --watch --verbose",
-    "test": "npm run build && NODE_ENV=test node --test --require ts-node/register test/*.test.ts",
+    "test": "npm run build && NODE_ENV=test node --test dist/test/*.test.js",
     "tidy": "npm run lint && npm run format"
   },
   "dependencies": {
