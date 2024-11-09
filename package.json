@@ -37,7 +37,7 @@
     "dotenv": "16.4.5",
     "express": "4.21.1",
     "express-session": "1.18.1",
-    "mongoose": "8.8.0",
+    "mongoose": "8.8.1",
     "passport": "0.7.0",
     "passport-local": "1.0.0",
     "pug": "3.0.3"
@@ -52,7 +52,7 @@
     "@types/passport-local": "1.0.38",
     "@types/supertest": "6.0.2",
     "autoprefixer": "10.4.20",
-    "concurrently": "8.2.2",
+    "concurrently": "9.1.0",
     "eslint-config-plus-prettier": "1.7.1",
     "nodemon": "3.1.7",
     "postcss": "8.4.47",
