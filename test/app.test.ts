@@ -162,6 +162,13 @@ describe("App", () => {
     });
   });
 
+  describe("Ping", () => {
+    it("should respond to a ping", async () => {
+      const res = await request(app).get("/ping");
+      assert.equal(res.statusCode, 200);
+    });
+  });
+
   it("should show the welcome page", async () => {
     const res = await request(app).get("/");
     assert.ok(res.text.includes("Welcome to Watch This!"));
