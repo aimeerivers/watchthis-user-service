@@ -1,5 +1,17 @@
 # Changelog
 
+## [2.0.2](https://github.com/aimeerivers/watchthis-user-service/compare/v2.0.1...v2.0.2) (2024-11-10)
+
+
+### Bug Fixes
+
+* Convert tailwind config to ES Module ([#116](https://github.com/aimeerivers/watchthis-user-service/issues/116)) ([7709427](https://github.com/aimeerivers/watchthis-user-service/commit/7709427983080f7be1c8aad49b66f99229fb3006))
+
+
+### Dependencies
+
+* Update eslint-config-plus-prettier ([#114](https://github.com/aimeerivers/watchthis-user-service/issues/114)) ([c09f974](https://github.com/aimeerivers/watchthis-user-service/commit/c09f9743f1bfa075e73664b5f43c8463b98a2581))
+
 ## [2.0.1](https://github.com/aimeerivers/watchthis-user-service/compare/v2.0.0...v2.0.1) (2024-11-09)
 
 
