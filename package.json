@@ -26,8 +26,7 @@
     "start:watch": "nodemon dist/src/server.js",
     "tailwind:css": "postcss src/styles/style.css -o public/styles/style.css",
     "tailwind:css:watch": "postcss src/styles/style.css -o public/styles/style.css --watch --verbose",
-    "test": "npm run build && NODE_ENV=test node --test dist/test/*.test.js",
-    "tidy": "npm run lint && npm run format"
+    "test": "NODE_ENV=test node --test dist/test/*.test.js"
   },
   "dependencies": {
     "app-root-path": "3.1.0",
@@ -53,7 +52,7 @@
     "@types/supertest": "6.0.2",
     "autoprefixer": "10.4.20",
     "concurrently": "9.1.0",
-    "eslint-config-plus-prettier": "3.0.0",
+    "eslint-config-plus-prettier": "4.0.0",
     "nodemon": "3.1.7",
     "postcss": "8.4.47",
     "postcss-cli": "11.0.0",
@@ -64,5 +63,5 @@
     "ts-node": "10.9.2",
     "typescript": "5.6.3"
   },
-  "prettier": "eslint-config-plus-prettier/.prettierrc.json"
+  "prettier": "eslint-config-plus-prettier/prettier"
 }
