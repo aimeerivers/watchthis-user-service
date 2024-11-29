@@ -117,7 +117,7 @@ export function applyAuthenticationMiddleware(app: express.Express): void {
           },
         });
       } catch (error) {
-        res.status(500).json({ error: "Internal server error" });
+        res.status(500).json({ error: `Internal server error: ${error}` });
       }
     });
   });
