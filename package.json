@@ -36,7 +36,7 @@
     "dotenv": "16.4.5",
     "express": "4.21.1",
     "express-session": "1.18.1",
-    "mongoose": "8.8.2",
+    "mongoose": "8.8.3",
     "passport": "0.7.0",
     "passport-local": "1.0.0",
     "pug": "3.0.3"
@@ -45,8 +45,8 @@
     "@faker-js/faker": "9.2.0",
     "@types/bcrypt": "5.0.2",
     "@types/connect-flash": "0.0.40",
-    "@types/express": "4.17.21",
-    "@types/express-session": "1.18.0",
+    "@types/express": "5.0.0",
+    "@types/express-session": "1.18.1",
     "@types/passport": "1.0.17",
     "@types/passport-local": "1.0.38",
     "@types/supertest": "6.0.2",
@@ -61,7 +61,7 @@
     "supertest-session": "5.0.1",
     "tailwindcss": "3.4.15",
     "ts-node": "10.9.2",
-    "typescript": "5.6.3"
+    "typescript": "5.7.2"
   },
   "prettier": "eslint-config-plus-prettier/prettier"
 }
