@@ -1,5 +1,12 @@
 # Changelog
 
+## [2.0.6](https://github.com/aimeerivers/watchthis-user-service/compare/v2.0.5...v2.0.6) (2024-11-30)
+
+
+### Dependencies
+
+* update dependencies ([#128](https://github.com/aimeerivers/watchthis-user-service/issues/128)) ([cabd200](https://github.com/aimeerivers/watchthis-user-service/commit/cabd20082612ec850c825e53dd493d53089af60b))
+
 ## [2.0.5](https://github.com/aimeerivers/watchthis-user-service/compare/v2.0.4...v2.0.5) (2024-11-29)
 
 
