@@ -18,4 +18,4 @@ jobs:
         with:
           token: ${{ secrets.RELEASE_PLEASE_TOKEN }}
           release-type: node
-          changelog-types: '[{"type":"feat","section":"Features","hidden":false},{"type":"fix","section":"Bug Fixes","hidden":false},{"type":"deps","section":"Dependencies","hidden":false}]'
+          changelog-types: '[{"type":"feat","section":"Features","hidden":false},{"type":"fix","section":"Bug Fixes","hidden":false},{"type":"deps","section":"Dependencies","hidden":false},{"type":"chore","section":"Chores","hidden":false},{"type":"docs","section":"Documentation","hidden":false}]'
