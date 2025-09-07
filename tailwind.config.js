@@ -3,11 +3,7 @@ export default {
     "./views/**/*.pug",
     // './src/**/*.js',
   ],
-  darkMode: "media",
   theme: {
-    extend: {},
-  },
-  variants: {
     extend: {},
   },
   plugins: [],
