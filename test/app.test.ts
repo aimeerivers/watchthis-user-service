@@ -10,6 +10,7 @@ import session from "supertest-session";
 import { app } from "../src/app.js";
 import { mongoStore } from "../src/auth.js";
 import { User } from "../src/models/user.js";
+import { generateValidPassword, generateValidUsername } from "./helpers/testData.js";
 
 const port = 18583;
 let server: Server;
@@ -46,7 +47,7 @@ describe("App", () => {
       const res = await request(app)
         .post("/signup")
         .type("form")
-        .send({ username: faker.internet.username(), password: faker.internet.password() });
+        .send({ username: generateValidUsername(), password: generateValidPassword() });
       assert.equal(res.statusCode, 302);
       assert.equal(res.headers.location, "/dashboard");
     });
@@ -56,9 +57,42 @@ describe("App", () => {
       const res = await request(app)
         .post("/signup")
         .type("form")
-        .send({ username: faker.internet.username(), password: faker.internet.password(), callbackUrl });
+        .send({ username: generateValidUsername(), password: generateValidPassword(), callbackUrl });
       assert.equal(res.statusCode, 302);
       assert.equal(res.headers.location, callbackUrl);
+    });
+
+    it("should redirect back to signup with validation errors for invalid password", async () => {
+      const res = await request(app)
+        .post("/signup")
+        .type("form")
+        .send({ username: generateValidUsername(), password: "weak" }); // Invalid password
+      assert.equal(res.statusCode, 302);
+      assert.equal(res.headers.location, "/signup");
+    });
+
+    it("should redirect back to signup with validation errors for invalid username", async () => {
+      const res = await request(app)
+        .post("/signup")
+        .type("form")
+        .send({ username: "ab", password: generateValidPassword() }); // Username too short
+      assert.equal(res.statusCode, 302);
+      assert.equal(res.headers.location, "/signup");
+    });
+
+    it("should show validation error messages on signup page after invalid submission", async () => {
+      const agent = session(app);
+
+      // First, submit invalid data
+      const postRes = await agent.post("/signup").type("form").send({ username: "ab", password: "weak" }); // Both invalid
+      assert.equal(postRes.statusCode, 302);
+      assert.equal(postRes.headers.location, "/signup");
+
+      // Then, get the signup page to see the error messages
+      const getRes = await agent.get("/signup");
+      assert.equal(getRes.statusCode, 200);
+      assert.ok(getRes.text.includes("Username must be between 3 and 30 characters"));
+      assert.ok(getRes.text.includes("Password must be at least 8 characters long"));
     });
   });
 
@@ -82,8 +116,8 @@ describe("App", () => {
     let password: string;
 
     before(async () => {
-      username = faker.internet.username();
-      password = faker.internet.password();
+      username = generateValidUsername();
+      password = generateValidPassword();
 
       const user = new User({
         username,
@@ -166,6 +200,20 @@ describe("App", () => {
     it("should respond to a ping", async () => {
       const res = await request(app).get("/ping");
       assert.equal(res.statusCode, 200);
+    });
+  });
+
+  describe("Health", () => {
+    it("should respond with health status", async () => {
+      const res = await request(app).get("/health");
+      assert.equal(res.statusCode, 200);
+      assert.equal(res.type, "application/json");
+      const body = JSON.parse(res.text);
+      assert.equal(body.status, "healthy");
+      assert.equal(body.service, "watchthis-user-service");
+      assert.equal(body.database, "connected");
+      assert.ok(body.version);
+      assert.ok(body.timestamp);
     });
   });
 
