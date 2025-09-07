@@ -1,5 +1,14 @@
 # Changelog
 
+## [2.1.1](https://github.com/aimeerivers/watchthis-user-service/compare/v2.1.0...v2.1.1) (2025-09-07)
+
+
+### Chores
+
+* Update dependencies ([#158](https://github.com/aimeerivers/watchthis-user-service/issues/158)) ([72044e0](https://github.com/aimeerivers/watchthis-user-service/commit/72044e0c48f8b1b4f43a240d181b26d0cc73fb27))
+* Update tailwindcss to 4.x ([#154](https://github.com/aimeerivers/watchthis-user-service/issues/154)) ([9c697a6](https://github.com/aimeerivers/watchthis-user-service/commit/9c697a631b78165687c494c3ccbb371d05e51a8a))
+* Update to express 5.x ([#156](https://github.com/aimeerivers/watchthis-user-service/issues/156)) ([8cd675f](https://github.com/aimeerivers/watchthis-user-service/commit/8cd675fa6ff67e845337fd6090668e40577cefed))
+
 ## [2.1.0](https://github.com/aimeerivers/watchthis-user-service/compare/v2.0.14...v2.1.0) (2025-09-07)
 
 
