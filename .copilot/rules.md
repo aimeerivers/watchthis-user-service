@@ -202,9 +202,17 @@ This is a Node.js/Express user authentication service built with TypeScript, Mon
 ### Linting & Formatting
 
 - Use eslint-config-plus-prettier for consistency
-- Run linting on all TypeScript files
-- Use Prettier for code formatting
-- Validate package.json structure
+- Run linting on all TypeScript files with `npm run lint`
+- Use Prettier for code formatting with `npm run format`
+- Validate package.json structure with `npm run package:lint`
+- Always ensure code passes: `npm run build`, `npm run test`, `npm run lint`, `npm run format`
+
+### Documentation Maintenance
+
+- Update Copilot documentation periodically when new patterns or information are learned
+- Keep rules.md, workspace.md, and improvements.md synchronized with actual codebase
+- Document new conventions and patterns as they are established
+- Review and update documentation during significant refactoring efforts
 
 ### Type Safety
 

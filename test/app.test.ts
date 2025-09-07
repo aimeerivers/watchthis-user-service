@@ -10,6 +10,7 @@ import session from "supertest-session";
 import { app } from "../src/app.js";
 import { mongoStore } from "../src/auth.js";
 import { User } from "../src/models/user.js";
+import { generateValidPassword, generateValidUsername } from "./helpers/testData.js";
 
 const port = 18583;
 let server: Server;
@@ -46,7 +47,7 @@ describe("App", () => {
       const res = await request(app)
         .post("/signup")
         .type("form")
-        .send({ username: faker.internet.username(), password: faker.internet.password() });
+        .send({ username: generateValidUsername(), password: generateValidPassword() });
       assert.equal(res.statusCode, 302);
       assert.equal(res.headers.location, "/dashboard");
     });
@@ -56,7 +57,7 @@ describe("App", () => {
       const res = await request(app)
         .post("/signup")
         .type("form")
-        .send({ username: faker.internet.username(), password: faker.internet.password(), callbackUrl });
+        .send({ username: generateValidUsername(), password: generateValidPassword(), callbackUrl });
       assert.equal(res.statusCode, 302);
       assert.equal(res.headers.location, callbackUrl);
     });
@@ -82,8 +83,8 @@ describe("App", () => {
     let password: string;
 
     before(async () => {
-      username = faker.internet.username();
-      password = faker.internet.password();
+      username = generateValidUsername();
+      password = generateValidPassword();
 
       const user = new User({
         username,
@@ -166,6 +167,20 @@ describe("App", () => {
     it("should respond to a ping", async () => {
       const res = await request(app).get("/ping");
       assert.equal(res.statusCode, 200);
+    });
+  });
+
+  describe("Health", () => {
+    it("should respond with health status", async () => {
+      const res = await request(app).get("/health");
+      assert.equal(res.statusCode, 200);
+      assert.equal(res.type, "application/json");
+      const body = JSON.parse(res.text);
+      assert.equal(body.status, "healthy");
+      assert.equal(body.service, "watchthis-user-service");
+      assert.equal(body.database, "connected");
+      assert.ok(body.version);
+      assert.ok(body.timestamp);
     });
   });
 
