@@ -61,6 +61,39 @@ describe("App", () => {
       assert.equal(res.statusCode, 302);
       assert.equal(res.headers.location, callbackUrl);
     });
+
+    it("should redirect back to signup with validation errors for invalid password", async () => {
+      const res = await request(app)
+        .post("/signup")
+        .type("form")
+        .send({ username: generateValidUsername(), password: "weak" }); // Invalid password
+      assert.equal(res.statusCode, 302);
+      assert.equal(res.headers.location, "/signup");
+    });
+
+    it("should redirect back to signup with validation errors for invalid username", async () => {
+      const res = await request(app)
+        .post("/signup")
+        .type("form")
+        .send({ username: "ab", password: generateValidPassword() }); // Username too short
+      assert.equal(res.statusCode, 302);
+      assert.equal(res.headers.location, "/signup");
+    });
+
+    it("should show validation error messages on signup page after invalid submission", async () => {
+      const agent = session(app);
+
+      // First, submit invalid data
+      const postRes = await agent.post("/signup").type("form").send({ username: "ab", password: "weak" }); // Both invalid
+      assert.equal(postRes.statusCode, 302);
+      assert.equal(postRes.headers.location, "/signup");
+
+      // Then, get the signup page to see the error messages
+      const getRes = await agent.get("/signup");
+      assert.equal(getRes.statusCode, 200);
+      assert.ok(getRes.text.includes("Username must be between 3 and 30 characters"));
+      assert.ok(getRes.text.includes("Password must be at least 8 characters long"));
+    });
   });
 
   describe("Log in page", () => {

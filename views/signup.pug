@@ -5,6 +5,11 @@ block head
 
 block body
   h2 Sign up
+  
+  if messages
+    each message in messages
+      div.alert.alert-error= message
+
   form#signup-form(action='/signup' method='POST')
     if callbackUrl
       input(type='hidden' name='callbackUrl' value=callbackUrl)

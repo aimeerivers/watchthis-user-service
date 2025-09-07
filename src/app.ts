@@ -51,7 +51,8 @@ app.set("views", path.join(appRootPath.path, "views"));
 app.use(express.static(path.join(appRootPath.path, "public")));
 
 app.get("/signup", (req, res) => {
-  res.render("signup", { callbackUrl: req.query.callbackUrl });
+  const messages = req.flash("error");
+  res.render("signup", { callbackUrl: req.query.callbackUrl, messages });
 });
 
 app.post(
