@@ -1,5 +1,12 @@
 # Changelog
 
+## [2.1.0](https://github.com/aimeerivers/watchthis-user-service/compare/v2.0.14...v2.1.0) (2025-09-07)
+
+
+### Features
+
+* Enhance error handling, validation, and security features ([#150](https://github.com/aimeerivers/watchthis-user-service/issues/150)) ([b22e143](https://github.com/aimeerivers/watchthis-user-service/commit/b22e1433cb0e65bd22fc290d01ea3e6e563e5079))
+
 ## [2.0.14](https://github.com/aimeerivers/watchthis-user-service/compare/v2.0.13...v2.0.14) (2025-08-25)
 
 
