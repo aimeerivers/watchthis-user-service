@@ -110,7 +110,7 @@ app.post("/logout", (req, res) => {
       return res.status(500).send("An error occurred while logging out");
     }
     // Redirect or respond as needed if logout is successful
-    res.redirect(req.body.callbackUrl ?? "/");
+    res.redirect(req.body?.callbackUrl ?? "/");
   });
 });
 
