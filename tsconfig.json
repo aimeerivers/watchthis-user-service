@@ -3,7 +3,6 @@
   "include": ["src", "test"],
   "compilerOptions": {
     "outDir": "dist",
-    "typeRoots": ["./node_modules/@types", "./test/types"],
-    "allowSyntheticDefaultImports": true
+    "typeRoots": ["./node_modules/@types", "./test/types"]
   }
 }
