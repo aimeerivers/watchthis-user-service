@@ -1,5 +1,12 @@
 # Changelog
 
+## [2.1.2](https://github.com/aimeerivers/watchthis-user-service/compare/v2.1.1...v2.1.2) (2025-09-09)
+
+
+### Bug Fixes
+
+* Improve session security and API endpoint ([#160](https://github.com/aimeerivers/watchthis-user-service/issues/160)) ([4b7beb8](https://github.com/aimeerivers/watchthis-user-service/commit/4b7beb8b276c48d5a37531a7ffde04468275e25c))
+
 ## [2.1.1](https://github.com/aimeerivers/watchthis-user-service/compare/v2.1.0...v2.1.1) (2025-09-07)
 
 
