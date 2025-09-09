@@ -42,11 +42,10 @@ app.use(
   })
 );
 
-applyAuthenticationMiddleware(app);
-
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
+applyAuthenticationMiddleware(app);
 app.set("view engine", "pug");
 app.set("views", path.join(appRootPath.path, "views"));
 app.use(express.static(path.join(appRootPath.path, "public")));
