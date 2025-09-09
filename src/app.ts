@@ -132,12 +132,25 @@ app.get("/ping", (_req, res) => {
 });
 
 // API endpoint for session validation (used by other services)
+// Define a type for the user session object
+interface UserSession {
+  _id?: string;
+  id?: string;
+  username?: string;
+}
+
+// Helper to safely get user ID
+function getUserId(user: UserSession): string | undefined {
+  return user._id ?? user.id;
+}
+
 app.get("/api/v1/session", (req, res) => {
-  if (req.user) {
+  const user = req.user as UserSession | undefined;
+  if (user) {
     res.json({
       user: {
-        _id: (req.user as any)._id || (req.user as any).id,
-        username: (req.user as any).username,
+        _id: getUserId(user),
+        username: user.username,
       },
     });
   } else {
