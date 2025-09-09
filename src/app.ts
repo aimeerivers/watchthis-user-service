@@ -44,6 +44,7 @@ app.use(
 
 applyAuthenticationMiddleware(app);
 
+app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
 app.set("view engine", "pug");
@@ -128,6 +129,20 @@ app.get("/hello/:name", (req, res) => {
 
 app.get("/ping", (_req, res) => {
   res.send(`${packageJson.name} ${packageJson.version}`);
+});
+
+// API endpoint for session validation (used by other services)
+app.get("/api/v1/session", (req, res) => {
+  if (req.user) {
+    res.json({
+      user: {
+        _id: (req.user as any)._id || (req.user as any).id,
+        username: (req.user as any).username,
+      },
+    });
+  } else {
+    res.status(401).json({ error: "Not authenticated" });
+  }
 });
 
 app.get(

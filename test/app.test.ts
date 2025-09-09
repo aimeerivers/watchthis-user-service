@@ -266,21 +266,28 @@ describe("App", () => {
         await testSession.post("/login").type("form").send({ username, password });
       });
 
-      it("should report session details", async () => {
+      it("should return user details when authenticated", async () => {
         const res = await testSession.get("/api/v1/session");
         assert.equal(res.statusCode, 200);
         const responseBody = JSON.parse(res.text);
-        assert(responseBody.sessionId);
         assert(responseBody.user);
+        assert(responseBody.user._id);
         assert.equal(responseBody.user.username, username);
       });
 
-      it("should not report session details after user has logged out", async () => {
+      it("should return 401 when not authenticated", async () => {
+        const res = await request(app).get("/api/v1/session");
+        assert.equal(res.statusCode, 401);
+        const responseBody = JSON.parse(res.text);
+        assert.equal(responseBody.error, "Not authenticated");
+      });
+
+      it("should return 401 after user has logged out", async () => {
         await testSession.post("/logout");
         const res = await testSession.get("/api/v1/session");
         assert.equal(res.statusCode, 401);
         const responseBody = JSON.parse(res.text);
-        assert.equal(responseBody.error, "Invalid or expired session");
+        assert.equal(responseBody.error, "Not authenticated");
       });
     });
   });
