@@ -42,10 +42,10 @@ app.use(
   })
 );
 
-applyAuthenticationMiddleware(app);
-
+app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
+applyAuthenticationMiddleware(app);
 app.set("view engine", "pug");
 app.set("views", path.join(appRootPath.path, "views"));
 app.use(express.static(path.join(appRootPath.path, "public")));
@@ -128,6 +128,33 @@ app.get("/hello/:name", (req, res) => {
 
 app.get("/ping", (_req, res) => {
   res.send(`${packageJson.name} ${packageJson.version}`);
+});
+
+// API endpoint for session validation (used by other services)
+// Define a type for the user session object
+interface UserSession {
+  _id?: string;
+  id?: string;
+  username?: string;
+}
+
+// Helper to safely get user ID
+function getUserId(user: UserSession): string | undefined {
+  return user._id ?? user.id;
+}
+
+app.get("/api/v1/session", (req, res) => {
+  const user = req.user as UserSession | undefined;
+  if (user) {
+    res.json({
+      user: {
+        _id: getUserId(user),
+        username: user.username,
+      },
+    });
+  } else {
+    res.status(401).json({ error: "Not authenticated" });
+  }
 });
 
 app.get(
