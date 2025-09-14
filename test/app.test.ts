@@ -132,7 +132,7 @@ describe("Watch This User Service - All Tests", () => {
       let username: string;
       let password: string;
 
-      before(async () => {
+      beforeEach(async () => {
         username = generateValidUsername();
         password = generateValidPassword();
 
@@ -174,7 +174,7 @@ describe("Watch This User Service - All Tests", () => {
       let username: string;
       let password: string;
 
-      before(async () => {
+      beforeEach(async () => {
         testSession = session(app);
         username = generateValidUsername();
         password = generateValidPassword();
@@ -271,7 +271,7 @@ describe("Watch This User Service - All Tests", () => {
         let username: string;
         let password: string;
 
-        before(async () => {
+        beforeEach(async () => {
           testSession = session(app);
           username = generateValidUsername();
           password = generateValidPassword();
