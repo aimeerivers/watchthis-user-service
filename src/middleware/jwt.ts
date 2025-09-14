@@ -43,7 +43,7 @@ export const authenticateJWT = async (req: RequestWithUser, res: Response, next:
 
     next();
   } catch (error) {
-    // Invalid token, continue without user
+    console.error("JWT authentication error:", error);
     next();
   }
 };

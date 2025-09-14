@@ -2,7 +2,6 @@ import assert from "node:assert";
 import type { Server } from "node:http";
 import { after, before, beforeEach, describe, it } from "node:test";
 
-import { faker } from "@faker-js/faker";
 import mongoose from "mongoose";
 import request, { SuperTest, Test } from "supertest";
 import session from "supertest-session";
@@ -421,10 +420,7 @@ describe("Watch This User Service - All Tests", () => {
 
         assert.equal(res.body.success, false);
         assert.equal(res.body.error.code, "AUTHENTICATION_REQUIRED");
-        assert.equal(
-          res.body.error.message,
-          "Authentication required"
-        );
+        assert.equal(res.body.error.message, "Authentication required");
       });
     });
 
