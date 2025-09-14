@@ -7,6 +7,8 @@ import path from "path";
 
 import packageJson from "../package.json" with { type: "json" };
 import { applyAuthenticationMiddleware, authenticate, ensureAuthenticated } from "./auth.js";
+import { getCurrentUser, loginWithJWT, refreshToken } from "./controllers/auth.js";
+import { authenticateJWT, requireJWT } from "./middleware/jwt.js";
 import { validateLogin, validateSignup } from "./middleware/validation.js";
 import { User } from "./models/user.js";
 import { asyncHandler } from "./utils/asyncHandler.js";
@@ -156,6 +158,30 @@ app.get("/api/v1/session", (req, res) => {
     res.status(401).json({ error: "Not authenticated" });
   }
 });
+
+// JWT Authentication API routes
+app.post("/api/v1/auth/login", loginWithJWT);
+app.post("/api/v1/auth/refresh", refreshToken);
+app.get("/api/v1/auth/me", authenticateJWT as any, getCurrentUser as any);
+
+// Protected API endpoint example (requires JWT)
+app.get(
+  "/api/v1/profile",
+  authenticateJWT as any,
+  requireJWT as any,
+  asyncHandler(async (req, res) => {
+    const user = (req as any).user as UserSession;
+    res.json({
+      success: true,
+      data: {
+        user: {
+          _id: getUserId(user),
+          username: user.username,
+        },
+      },
+    });
+  })
+);
 
 app.get(
   "/health",
