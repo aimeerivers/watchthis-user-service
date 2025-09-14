@@ -1,5 +1,12 @@
 # Changelog
 
+## [2.2.0](https://github.com/aimeerivers/watchthis-user-service/compare/v2.1.2...v2.2.0) (2025-09-14)
+
+
+### Features
+
+* Implement JWT authentication with login, refresh, and user info endpoints ([#162](https://github.com/aimeerivers/watchthis-user-service/issues/162)) ([f2fdb7f](https://github.com/aimeerivers/watchthis-user-service/commit/f2fdb7ff9d3490902beaafb0d8ce5c13a625f6eb))
+
 ## [2.1.2](https://github.com/aimeerivers/watchthis-user-service/compare/v2.1.1...v2.1.2) (2025-09-09)
 
 
