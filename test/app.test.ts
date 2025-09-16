@@ -717,6 +717,104 @@ describe("Watch This User Service - All Tests", () => {
       });
     });
 
+    describe("GET /api/v1/auth/session-to-jwt - Session to JWT Conversion", () => {
+      it("should convert valid session to JWT tokens", async () => {
+        // Create a test user
+        const username = generateValidUsername();
+        const password = generateValidPassword();
+        const user = new User({ username, password });
+        await user.save();
+
+        // Create a session by logging in via web interface
+        const testSession = session(app);
+
+        // Login to create session
+        await testSession.post("/login").send({ username, password }).expect(302); // Redirect after successful login
+
+        // Now convert session to JWT
+        const res = await testSession.get("/api/v1/auth/session-to-jwt").expect(200);
+
+        assert.equal(res.body.success, true);
+        assert.ok(res.body.data);
+        assert.ok(res.body.data.accessToken);
+        assert.ok(res.body.data.refreshToken);
+        assert.equal(res.body.data.expiresIn, "24h");
+        assert.equal(res.body.data.user.username, username);
+        assert.ok(res.body.data.user._id);
+
+        // Verify the access token is valid
+        const decoded = verifyToken(res.body.data.accessToken);
+        assert.equal(decoded.type, "access");
+        assert.equal(decoded.username, username);
+        assert.equal(decoded.userId, user.id);
+      });
+
+      it("should fail without valid session", async () => {
+        // Try to get JWT without session
+        const res = await request(app).get("/api/v1/auth/session-to-jwt").expect(401);
+
+        assert.equal(res.body.success, false);
+        assert.equal(res.body.error.code, "NO_SESSION");
+        assert.equal(res.body.error.message, "No valid session found");
+      });
+
+      it("should fail if user is deleted after session creation", async () => {
+        // Create a test user
+        const username = generateValidUsername();
+        const password = generateValidPassword();
+        const user = new User({ username, password });
+        await user.save();
+
+        // Create a session by logging in
+        const testSession = session(app);
+        await testSession.post("/login").send({ username, password }).expect(302);
+
+        // Delete the user
+        await User.findByIdAndDelete(user.id);
+
+        // Try to convert session to JWT - session becomes invalid when user is deleted
+        const res = await testSession.get("/api/v1/auth/session-to-jwt").expect(401);
+
+        assert.equal(res.body.success, false);
+        assert.equal(res.body.error.code, "NO_SESSION");
+        assert.equal(res.body.error.message, "No valid session found");
+      });
+
+      it("should generate different tokens on subsequent calls", async () => {
+        // Create a test user and session
+        const username = generateValidUsername();
+        const password = generateValidPassword();
+        const user = new User({ username, password });
+        await user.save();
+
+        const testSession = session(app);
+        await testSession.post("/login").send({ username, password }).expect(302);
+
+        // Get first set of tokens
+        const res1 = await testSession.get("/api/v1/auth/session-to-jwt").expect(200);
+
+        // Wait at least 1 second to ensure different `iat` timestamps
+        await new Promise((resolve) => setTimeout(resolve, 1100));
+
+        // Get second set of tokens
+        const res2 = await testSession.get("/api/v1/auth/session-to-jwt").expect(200);
+
+        // Tokens should be different (new tokens generated each time)
+        assert.notEqual(res1.body.data.accessToken, res2.body.data.accessToken);
+        assert.notEqual(res1.body.data.refreshToken, res2.body.data.refreshToken);
+
+        // But both should be valid for the same user
+        const decoded1 = verifyToken(res1.body.data.accessToken);
+        const decoded2 = verifyToken(res2.body.data.accessToken);
+
+        assert.equal(decoded1.userId, decoded2.userId);
+        assert.equal(decoded1.username, decoded2.username);
+
+        // Verify different issued-at times
+        assert.notEqual(decoded1.iat, decoded2.iat);
+      });
+    });
+
     describe("JWT Middleware Integration", () => {
       it("should work with existing session endpoint", async () => {
         // Test that the existing /api/v1/session endpoint still works
