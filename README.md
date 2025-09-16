@@ -169,6 +169,44 @@ Content-Type: application/json
 }
 ```
 
+#### Convert Session to JWT Tokens
+
+For services that need to convert web session authentication to JWT tokens (e.g., home service calling APIs):
+
+```bash
+GET /api/v1/auth/session-to-jwt
+Cookie: connect.sid=<session_cookie>
+```
+
+**Response:**
+
+```json
+{
+  "success": true,
+  "data": {
+    "user": {
+      "_id": "user_id",
+      "username": "your_username"
+    },
+    "accessToken": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...",
+    "refreshToken": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...",
+    "expiresIn": "24h"
+  }
+}
+```
+
+**Error Response (No Session):**
+
+```json
+{
+  "success": false,
+  "error": {
+    "code": "NO_SESSION",
+    "message": "No valid session found"
+  }
+}
+```
+
 ### Using JWT Tokens
 
 #### Authentication Header
