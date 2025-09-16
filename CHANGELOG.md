@@ -1,5 +1,12 @@
 # Changelog
 
+## [2.3.0](https://github.com/aimeerivers/watchthis-user-service/compare/v2.2.0...v2.3.0) (2025-09-16)
+
+
+### Features
+
+* Add endpoint to convert session to JWT tokens with tests and documentation ([#164](https://github.com/aimeerivers/watchthis-user-service/issues/164)) ([348aa5f](https://github.com/aimeerivers/watchthis-user-service/commit/348aa5f270b6d7bd279500b70f678d4d1c774e0e))
+
 ## [2.2.0](https://github.com/aimeerivers/watchthis-user-service/compare/v2.1.2...v2.2.0) (2025-09-14)
 
 
