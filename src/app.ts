@@ -12,6 +12,7 @@ import { authenticateJWT, requireJWT } from "./middleware/jwt.js";
 import { validateLogin, validateSignup } from "./middleware/validation.js";
 import { User } from "./models/user.js";
 import { asyncHandler } from "./utils/asyncHandler.js";
+import { generateTokenPair } from "./utils/jwt.js";
 
 dotenv.config();
 
@@ -163,6 +164,49 @@ app.get("/api/v1/session", (req, res) => {
 app.post("/api/v1/auth/login", loginWithJWT);
 app.post("/api/v1/auth/refresh", refreshToken);
 app.get("/api/v1/auth/me", authenticateJWT as any, getCurrentUser as any);
+app.get(
+  "/api/v1/auth/session-to-jwt",
+  asyncHandler(async (req, res) => {
+    try {
+      // Check if user has valid session (API version - returns JSON instead of redirect)
+      const user = req.user as UserSession | undefined;
+      if (!user || !req.isAuthenticated?.()) {
+        res.status(401).json({
+          success: false,
+          error: { code: "NO_SESSION", message: "No valid session found" },
+        });
+        return;
+      }
+
+      // Find the full user document to generate JWT tokens
+      const userDoc = await User.findById(getUserId(user));
+      if (!userDoc) {
+        res.status(401).json({
+          success: false,
+          error: { code: "USER_NOT_FOUND", message: "User not found" },
+        });
+        return;
+      }
+
+      // Generate JWT tokens for the authenticated user
+      const tokens = generateTokenPair(userDoc);
+
+      res.json({
+        success: true,
+        data: {
+          user: { _id: getUserId(user), username: user.username },
+          ...tokens,
+        },
+      });
+    } catch (error) {
+      console.error("Session to JWT conversion error:", error);
+      res.status(500).json({
+        success: false,
+        error: { code: "CONVERSION_ERROR", message: "Failed to convert session to JWT" },
+      });
+    }
+  })
+);
 
 // Protected API endpoint example (requires JWT)
 app.get(
