@@ -1,5 +1,12 @@
 # Changelog
 
+## [2.3.1](https://github.com/aimeerivers/watchthis-user-service/compare/v2.3.0...v2.3.1) (2025-09-18)
+
+
+### Continuous Integration
+
+* Update Release Please to v4 ([#166](https://github.com/aimeerivers/watchthis-user-service/issues/166)) ([0020988](https://github.com/aimeerivers/watchthis-user-service/commit/00209887c0a9817b7179471fbcec3031499f0d8f))
+
 ## [2.3.0](https://github.com/aimeerivers/watchthis-user-service/compare/v2.2.0...v2.3.0) (2025-09-16)
 
 
