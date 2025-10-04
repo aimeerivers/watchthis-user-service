@@ -22,15 +22,18 @@ const mongoUserService = `${mongoUrl}${process.env.NODE_ENV === "test" ? "-test"
 // Parse allowed redirect hosts from environment variable
 const getAllowedHosts = (): string[] => {
   const envHosts = process.env.ALLOWED_REDIRECT_HOSTS;
-  const defaultHosts = ['localhost', '127.0.0.1'];
-  
+  const defaultHosts = ["localhost", "127.0.0.1"];
+
   if (envHosts && envHosts.trim()) {
-    const parsedHosts = envHosts.split(',').map(host => host.trim()).filter(host => host.length > 0);
+    const parsedHosts = envHosts
+      .split(",")
+      .map((host) => host.trim())
+      .filter((host) => host.length > 0);
     // Ensure localhost and 127.0.0.1 are always included for development/testing
     const allHosts = [...new Set([...defaultHosts, ...parsedHosts])];
     return allHosts;
   }
-  
+
   return defaultHosts;
 };
 
@@ -91,10 +94,10 @@ app.post(
           console.log(err);
           return res.status(500).send();
         }
-        
+
         // Use intermediate redirect to avoid CSP issues
         const callbackUrl = req.body.callbackUrl;
-        
+
         if (callbackUrl && callbackUrl !== "/dashboard") {
           res.redirect(`/redirect?to=${encodeURIComponent(callbackUrl)}`);
         } else {
@@ -137,7 +140,7 @@ app.post("/logout", (req, res) => {
       console.error(err);
       return res.status(500).send("An error occurred while logging out");
     }
-    
+
     // Use intermediate redirect to avoid CSP issues
     const callbackUrl = req.body?.callbackUrl;
     if (callbackUrl && callbackUrl !== "/") {
@@ -150,18 +153,16 @@ app.post("/logout", (req, res) => {
 
 app.get("/redirect", (req, res) => {
   const targetUrl = req.query.to as string;
-  
+
   if (!targetUrl) {
     return res.redirect("/dashboard");
   }
-  
+
   // Basic validation to ensure we're redirecting to allowed domains
   try {
     const url = new URL(targetUrl);
-    const isAllowed = allowedRedirectHosts.some(host => 
-      url.hostname === host || url.hostname.endsWith(`.${host}`)
-    );
-    
+    const isAllowed = allowedRedirectHosts.some((host) => url.hostname === host || url.hostname.endsWith(`.${host}`));
+
     if (isAllowed) {
       // Use meta refresh redirect instead of HTTP redirect to bypass CSP
       res.send(`

@@ -362,7 +362,7 @@ describe("Watch This User Service - All Tests", () => {
         const res = await request(app)
           .get(`/redirect?to=${encodeURIComponent(targetUrl)}`)
           .expect(200);
-        
+
         // Should return HTML with meta refresh and JavaScript redirect
         assert(res.text.includes(`<meta http-equiv="refresh" content="0; url=${targetUrl}">`));
         assert(res.text.includes(`window.location.href = "${targetUrl}"`));
@@ -374,24 +374,20 @@ describe("Watch This User Service - All Tests", () => {
         const res = await request(app)
           .get(`/redirect?to=${encodeURIComponent(targetUrl)}`)
           .expect(200);
-        
+
         assert(res.text.includes(`<meta http-equiv="refresh" content="0; url=${targetUrl}">`));
         assert(res.text.includes(`window.location.href = "${targetUrl}"`));
       });
 
       it("should redirect to dashboard when no target URL provided", async () => {
-        const res = await request(app)
-          .get("/redirect")
-          .expect(302);
-        
+        const res = await request(app).get("/redirect").expect(302);
+
         assert.equal(res.headers.location, "/dashboard");
       });
 
       it("should redirect to dashboard when empty target URL provided", async () => {
-        const res = await request(app)
-          .get("/redirect?to=")
-          .expect(302);
-        
+        const res = await request(app).get("/redirect?to=").expect(302);
+
         assert.equal(res.headers.location, "/dashboard");
       });
 
@@ -400,7 +396,7 @@ describe("Watch This User Service - All Tests", () => {
         const res = await request(app)
           .get(`/redirect?to=${encodeURIComponent(targetUrl)}`)
           .expect(302);
-        
+
         assert.equal(res.headers.location, "/dashboard");
       });
 
@@ -409,7 +405,7 @@ describe("Watch This User Service - All Tests", () => {
         const res = await request(app)
           .get(`/redirect?to=${encodeURIComponent(targetUrl)}`)
           .expect(302);
-        
+
         assert.equal(res.headers.location, "/dashboard");
       });
 
@@ -418,7 +414,7 @@ describe("Watch This User Service - All Tests", () => {
         const res = await request(app)
           .get(`/redirect?to=${encodeURIComponent(targetUrl)}`)
           .expect(200);
-        
+
         assert(res.text.includes(`<meta http-equiv="refresh" content="0; url=${targetUrl}">`));
       });
 
@@ -427,7 +423,7 @@ describe("Watch This User Service - All Tests", () => {
         const res = await request(app)
           .get(`/redirect?to=${encodeURIComponent(targetUrl)}`)
           .expect(200);
-        
+
         assert(res.text.includes(`<meta http-equiv="refresh" content="0; url=${targetUrl}">`));
         assert(res.text.includes(`window.location.href = "${targetUrl}"`));
       });
@@ -437,7 +433,7 @@ describe("Watch This User Service - All Tests", () => {
         const res = await request(app)
           .get(`/redirect?to=${encodeURIComponent(targetUrl)}`)
           .expect(200);
-        
+
         assert(res.text.includes(`<meta http-equiv="refresh" content="0; url=${targetUrl}">`));
       });
     });

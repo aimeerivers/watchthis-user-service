@@ -100,19 +100,19 @@ export const authenticate: RequestHandler = (req, res, next) => {
       req.flash("error", info?.message || "Login failed");
       return res.redirect("/login");
     }
-    
+
     req.logIn(user, (err: any) => {
       if (err) {
         return next(err);
       }
-      
+
       // Force session save before redirect to prevent race conditions
       req.session.save((err: any) => {
         if (err) {
           console.error("Session save error:", err);
           return next(err);
         }
-        
+
         // Use intermediate redirect to avoid CSP issues
         const callbackUrl = req.body.callbackUrl;
         if (callbackUrl && callbackUrl !== "/dashboard") {
