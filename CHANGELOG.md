@@ -1,5 +1,12 @@
 # Changelog
 
+## [2.3.4](https://github.com/aimeerivers/watchthis-user-service/compare/v2.3.3...v2.3.4) (2025-10-04)
+
+
+### Chores
+
+* Enable a Docker image to be built ([#172](https://github.com/aimeerivers/watchthis-user-service/issues/172)) ([88a33e8](https://github.com/aimeerivers/watchthis-user-service/commit/88a33e88f2119d57b2e7998f1aedb08752afbe76))
+
 ## [2.3.3](https://github.com/aimeerivers/watchthis-user-service/compare/v2.3.2...v2.3.3) (2025-09-21)
 
 
