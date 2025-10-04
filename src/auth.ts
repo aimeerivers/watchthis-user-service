@@ -92,9 +92,35 @@ export const ensureAuthenticated: RequestHandler = (
 };
 
 export const authenticate: RequestHandler = (req, res, next) => {
-  passport.authenticate("local", {
-    successRedirect: req.body.callbackUrl ?? "/dashboard",
-    failureRedirect: "/login",
-    failureFlash: true,
+  passport.authenticate("local", (err: any, user: any, info: any) => {
+    if (err) {
+      return next(err);
+    }
+    if (!user) {
+      req.flash("error", info?.message || "Login failed");
+      return res.redirect("/login");
+    }
+    
+    req.logIn(user, (err: any) => {
+      if (err) {
+        return next(err);
+      }
+      
+      // Force session save before redirect to prevent race conditions
+      req.session.save((err: any) => {
+        if (err) {
+          console.error("Session save error:", err);
+          return next(err);
+        }
+        
+        // Use intermediate redirect to avoid CSP issues
+        const callbackUrl = req.body.callbackUrl;
+        if (callbackUrl && callbackUrl !== "/dashboard") {
+          res.redirect(`/redirect?to=${encodeURIComponent(callbackUrl)}`);
+        } else {
+          res.redirect("/dashboard");
+        }
+      });
+    });
   })(req, res, next);
 };
