@@ -187,8 +187,12 @@ app.get("/redirect", (req, res) => {
   }
 });
 
-app.get("/", (_req, res) => {
-  res.render("welcome-page");
+app.get("/", (req, res) => {
+  if (req.isAuthenticated && req.isAuthenticated()) {
+    res.redirect("/dashboard");
+  } else {
+    res.render("welcome-page");
+  }
 });
 
 app.post("/andre", (_req, res) => {

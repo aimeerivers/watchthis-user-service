@@ -259,9 +259,28 @@ describe("Watch This User Service - All Tests", () => {
       });
     });
 
-    it("should show the welcome page", async () => {
+    it("should show the welcome page when not logged in", async () => {
       const res = await request(app).get("/");
+      assert.equal(res.statusCode, 200);
       assert.ok(res.text.includes("Welcome to Watch This!"));
+    });
+
+    it("should redirect to dashboard when logged in", async () => {
+      // Create a test session and log in
+      const testSession = session(app);
+      const username = generateValidUsername();
+      const password = generateValidPassword();
+
+      const user = new User({ username, password });
+      await user.save();
+
+      // Log in
+      await testSession.post("/login").send({ username, password });
+
+      // Visit root path - should redirect to dashboard
+      const res = await testSession.get("/");
+      assert.equal(res.statusCode, 302);
+      assert.equal(res.headers.location, "/dashboard");
     });
 
     it("should give a 404 when a route is not found", async () => {
