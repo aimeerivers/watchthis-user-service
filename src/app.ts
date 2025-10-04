@@ -19,6 +19,26 @@ dotenv.config();
 const mongoUrl = process.env.MONGO_URL ?? "mongodb://localhost:27017/user-service";
 const mongoUserService = `${mongoUrl}${process.env.NODE_ENV === "test" ? "-test" : ""}`;
 
+// Parse allowed redirect hosts from environment variable
+const getAllowedHosts = (): string[] => {
+  const envHosts = process.env.ALLOWED_REDIRECT_HOSTS;
+  const defaultHosts = ["localhost", "127.0.0.1"];
+
+  if (envHosts && envHosts.trim()) {
+    const parsedHosts = envHosts
+      .split(",")
+      .map((host) => host.trim())
+      .filter((host) => host.length > 0);
+    // Ensure localhost and 127.0.0.1 are always included for development/testing
+    const allHosts = [...new Set([...defaultHosts, ...parsedHosts])];
+    return allHosts;
+  }
+
+  return defaultHosts;
+};
+
+const allowedRedirectHosts = getAllowedHosts();
+
 mongoose
   .connect(mongoUserService)
   .then(() => {
@@ -74,7 +94,15 @@ app.post(
           console.log(err);
           return res.status(500).send();
         }
-        res.redirect(req.body.callbackUrl ?? "/dashboard");
+
+        // Use intermediate redirect to avoid CSP issues
+        const callbackUrl = req.body.callbackUrl;
+
+        if (callbackUrl && callbackUrl !== "/dashboard") {
+          res.redirect(`/redirect?to=${encodeURIComponent(callbackUrl)}`);
+        } else {
+          res.redirect("/dashboard");
+        }
       });
     } catch (error) {
       console.error("Signup error:", error);
@@ -112,13 +140,60 @@ app.post("/logout", (req, res) => {
       console.error(err);
       return res.status(500).send("An error occurred while logging out");
     }
-    // Redirect or respond as needed if logout is successful
-    res.redirect(req.body?.callbackUrl ?? "/");
+
+    // Use intermediate redirect to avoid CSP issues
+    const callbackUrl = req.body?.callbackUrl;
+    if (callbackUrl && callbackUrl !== "/") {
+      res.redirect(`/redirect?to=${encodeURIComponent(callbackUrl)}`);
+    } else {
+      res.redirect("/");
+    }
   });
 });
 
-app.get("/", (_req, res) => {
-  res.render("welcome-page");
+app.get("/redirect", (req, res) => {
+  const targetUrl = req.query.to as string;
+
+  if (!targetUrl) {
+    return res.redirect("/dashboard");
+  }
+
+  // Basic validation to ensure we're redirecting to allowed domains
+  try {
+    const url = new URL(targetUrl);
+    const isAllowed = allowedRedirectHosts.some((host) => url.hostname === host || url.hostname.endsWith(`.${host}`));
+
+    if (isAllowed) {
+      // Use meta refresh redirect instead of HTTP redirect to bypass CSP
+      res.send(`
+        <!DOCTYPE html>
+        <html>
+        <head>
+          <meta http-equiv="refresh" content="0; url=${targetUrl}">
+          <title>Redirecting...</title>
+        </head>
+        <body>
+          <p>Redirecting to <a href="${targetUrl}">${targetUrl}</a>...</p>
+          <script>window.location.href = "${targetUrl}";</script>
+        </body>
+        </html>
+      `);
+    } else {
+      console.warn(`Redirect to unauthorized domain attempted: ${url.hostname}`);
+      res.redirect("/dashboard");
+    }
+  } catch (error) {
+    console.error("Invalid redirect URL:", targetUrl);
+    res.redirect("/dashboard");
+  }
+});
+
+app.get("/", (req, res) => {
+  if (req.isAuthenticated && req.isAuthenticated()) {
+    res.redirect("/dashboard");
+  } else {
+    res.render("welcome-page");
+  }
 });
 
 app.post("/andre", (_req, res) => {

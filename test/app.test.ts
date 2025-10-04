@@ -69,8 +69,18 @@ describe("Watch This User Service - All Tests", () => {
         assert.equal(res.headers.location, "/dashboard");
       });
 
-      it("should redirect to the callbackUrl if one is set", async () => {
-        const callbackUrl = "/test";
+      it("should redirect to intermediate redirect when callbackUrl is external", async () => {
+        const callbackUrl = "http://localhost:7279/";
+        const res = await request(app)
+          .post("/signup")
+          .type("form")
+          .send({ username: generateValidUsername(), password: generateValidPassword(), callbackUrl });
+        assert.equal(res.statusCode, 302);
+        assert.equal(res.headers.location, `/redirect?to=${encodeURIComponent(callbackUrl)}`);
+      });
+
+      it("should redirect directly when callbackUrl is internal", async () => {
+        const callbackUrl = "/dashboard";
         const res = await request(app)
           .post("/signup")
           .type("form")
@@ -149,8 +159,15 @@ describe("Watch This User Service - All Tests", () => {
         assert.equal(res.headers.location, "/dashboard");
       });
 
-      it("should redirect to the callbackUrl if one is set", async () => {
-        const callbackUrl = "/test";
+      it("should redirect to intermediate redirect when callbackUrl is external", async () => {
+        const callbackUrl = "http://localhost:7279/";
+        const res = await request(app).post("/login").type("form").send({ username, password, callbackUrl });
+        assert.equal(res.statusCode, 302);
+        assert.equal(res.headers.location, `/redirect?to=${encodeURIComponent(callbackUrl)}`);
+      });
+
+      it("should redirect directly when callbackUrl is internal", async () => {
+        const callbackUrl = "/dashboard";
         const res = await request(app).post("/login").type("form").send({ username, password, callbackUrl });
         assert.equal(res.statusCode, 302);
         assert.equal(res.headers.location, callbackUrl);
@@ -206,8 +223,15 @@ describe("Watch This User Service - All Tests", () => {
         assert.equal(res.headers.location, "/login");
       });
 
-      it("should redirect to the callbackUrl if one is set", async () => {
-        const callbackUrl = "/test";
+      it("should redirect to intermediate redirect when callbackUrl is external", async () => {
+        const callbackUrl = "http://localhost:7279/";
+        const res = await testSession.post("/logout").type("form").send({ callbackUrl });
+        assert.equal(res.statusCode, 302);
+        assert.equal(res.headers.location, `/redirect?to=${encodeURIComponent(callbackUrl)}`);
+      });
+
+      it("should redirect directly when callbackUrl is internal", async () => {
+        const callbackUrl = "/";
         const res = await testSession.post("/logout").type("form").send({ callbackUrl });
         assert.equal(res.statusCode, 302);
         assert.equal(res.headers.location, callbackUrl);
@@ -235,9 +259,28 @@ describe("Watch This User Service - All Tests", () => {
       });
     });
 
-    it("should show the welcome page", async () => {
+    it("should show the welcome page when not logged in", async () => {
       const res = await request(app).get("/");
+      assert.equal(res.statusCode, 200);
       assert.ok(res.text.includes("Welcome to Watch This!"));
+    });
+
+    it("should redirect to dashboard when logged in", async () => {
+      // Create a test session and log in
+      const testSession = session(app);
+      const username = generateValidUsername();
+      const password = generateValidPassword();
+
+      const user = new User({ username, password });
+      await user.save();
+
+      // Log in
+      await testSession.post("/login").send({ username, password });
+
+      // Visit root path - should redirect to dashboard
+      const res = await testSession.get("/");
+      assert.equal(res.statusCode, 302);
+      assert.equal(res.headers.location, "/dashboard");
     });
 
     it("should give a 404 when a route is not found", async () => {
@@ -308,6 +351,90 @@ describe("Watch This User Service - All Tests", () => {
           const responseBody = JSON.parse(res.text);
           assert.equal(responseBody.error, "Not authenticated");
         });
+      });
+    });
+  });
+
+  describe("Redirect Route", () => {
+    describe("GET /redirect", () => {
+      it("should redirect to allowed localhost URL", async () => {
+        const targetUrl = "http://localhost:7279/dashboard";
+        const res = await request(app)
+          .get(`/redirect?to=${encodeURIComponent(targetUrl)}`)
+          .expect(200);
+
+        // Should return HTML with meta refresh and JavaScript redirect
+        assert(res.text.includes(`<meta http-equiv="refresh" content="0; url=${targetUrl}">`));
+        assert(res.text.includes(`window.location.href = "${targetUrl}"`));
+        assert(res.text.includes(`<a href="${targetUrl}">${targetUrl}</a>`));
+      });
+
+      it("should redirect to allowed 127.0.0.1 URL", async () => {
+        const targetUrl = "http://127.0.0.1:8080/test";
+        const res = await request(app)
+          .get(`/redirect?to=${encodeURIComponent(targetUrl)}`)
+          .expect(200);
+
+        assert(res.text.includes(`<meta http-equiv="refresh" content="0; url=${targetUrl}">`));
+        assert(res.text.includes(`window.location.href = "${targetUrl}"`));
+      });
+
+      it("should redirect to dashboard when no target URL provided", async () => {
+        const res = await request(app).get("/redirect").expect(302);
+
+        assert.equal(res.headers.location, "/dashboard");
+      });
+
+      it("should redirect to dashboard when empty target URL provided", async () => {
+        const res = await request(app).get("/redirect?to=").expect(302);
+
+        assert.equal(res.headers.location, "/dashboard");
+      });
+
+      it("should redirect to dashboard for unauthorized domain", async () => {
+        const targetUrl = "http://malicious.com/steal-data";
+        const res = await request(app)
+          .get(`/redirect?to=${encodeURIComponent(targetUrl)}`)
+          .expect(302);
+
+        assert.equal(res.headers.location, "/dashboard");
+      });
+
+      it("should redirect to dashboard for invalid URL", async () => {
+        const targetUrl = "not-a-valid-url";
+        const res = await request(app)
+          .get(`/redirect?to=${encodeURIComponent(targetUrl)}`)
+          .expect(302);
+
+        assert.equal(res.headers.location, "/dashboard");
+      });
+
+      it("should allow subdomain of localhost", async () => {
+        const targetUrl = "http://api.localhost:3000/callback";
+        const res = await request(app)
+          .get(`/redirect?to=${encodeURIComponent(targetUrl)}`)
+          .expect(200);
+
+        assert(res.text.includes(`<meta http-equiv="refresh" content="0; url=${targetUrl}">`));
+      });
+
+      it("should handle URLs with query parameters and fragments", async () => {
+        const targetUrl = "http://localhost:7279/dashboard?user=test&redirect=true#section";
+        const res = await request(app)
+          .get(`/redirect?to=${encodeURIComponent(targetUrl)}`)
+          .expect(200);
+
+        assert(res.text.includes(`<meta http-equiv="refresh" content="0; url=${targetUrl}">`));
+        assert(res.text.includes(`window.location.href = "${targetUrl}"`));
+      });
+
+      it("should handle HTTPS localhost URLs", async () => {
+        const targetUrl = "https://localhost:8443/secure";
+        const res = await request(app)
+          .get(`/redirect?to=${encodeURIComponent(targetUrl)}`)
+          .expect(200);
+
+        assert(res.text.includes(`<meta http-equiv="refresh" content="0; url=${targetUrl}">`));
       });
     });
   });
