@@ -1,5 +1,12 @@
 # Changelog
 
+## [2.3.5](https://github.com/aimeerivers/watchthis-user-service/compare/v2.3.4...v2.3.5) (2025-10-05)
+
+
+### Continuous Integration
+
+* Use a shared workflow to build and publish a Docker image ([#176](https://github.com/aimeerivers/watchthis-user-service/issues/176)) ([ff018f4](https://github.com/aimeerivers/watchthis-user-service/commit/ff018f44e957413a331a283ac2cb4d65f557be6b))
+
 ## [2.3.4](https://github.com/aimeerivers/watchthis-user-service/compare/v2.3.3...v2.3.4) (2025-10-04)
 
 
