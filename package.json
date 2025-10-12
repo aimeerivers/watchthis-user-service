@@ -61,6 +61,7 @@
     "@types/supertest": "6.0.3",
     "autoprefixer": "10.4.21",
     "concurrently": "9.2.1",
+    "dotenv-cli": "10.0.0",
     "eslint-config-plus-prettier": "4.2.2",
     "nodemon": "3.1.10",
     "postcss": "8.5.6",
