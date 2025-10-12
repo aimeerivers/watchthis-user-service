@@ -1,5 +1,16 @@
 # Changelog
 
+## [3.0.0](https://github.com/aimeerivers/watchthis-user-service/compare/v2.3.5...v3.0.0) (2025-10-12)
+
+
+### ⚠ BREAKING CHANGES
+
+* The User Service now uses PostgreSQL instead of Mongodb. Please follow setup instructions in the README and check your environment variables.
+
+### Features
+
+* Switch to using PostgreSQL ([#178](https://github.com/aimeerivers/watchthis-user-service/issues/178)) ([510100e](https://github.com/aimeerivers/watchthis-user-service/commit/510100e63131c8a0086fc41eeb1061e8bd4c4ad2))
+
 ## [2.3.5](https://github.com/aimeerivers/watchthis-user-service/compare/v2.3.4...v2.3.5) (2025-10-05)
 
 
