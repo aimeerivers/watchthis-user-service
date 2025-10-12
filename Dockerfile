@@ -40,7 +40,6 @@ COPY --from=builder /app/dist ./dist
 COPY --from=builder /app/prisma ./prisma
 COPY --from=builder /app/public ./public
 COPY --from=builder /app/views ./views
-COPY --from=builder /app/node_modules/.prisma ./node_modules/.prisma
 
 # Create non-root user for security
 RUN addgroup -g 1001 -S nodejs
