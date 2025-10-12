@@ -1,5 +1,5 @@
 import flash from "connect-flash";
-import MongoStore from "connect-mongo";
+import connectPgSimple from "connect-pg-simple";
 import crypto from "crypto";
 import dotenv from "dotenv";
 import type { RequestHandler } from "express";
@@ -11,11 +11,18 @@ import { Strategy as LocalStrategy } from "passport-local";
 import type { IUser } from "./models/user.js";
 import { User } from "./models/user.js";
 
-dotenv.config();
+// Load environment variables based on NODE_ENV
+const envFile = process.env.NODE_ENV === "test" ? ".env.test" : ".env";
+dotenv.config({ path: envFile });
 
-const mongoUrl = process.env.MONGO_URL ?? "mongodb://localhost:27017/user-service";
-const mongoSessionStore = `${mongoUrl}${process.env.NODE_ENV === "test" ? "-test" : ""}`;
-export const mongoStore = MongoStore.create({ mongoUrl: mongoSessionStore });
+const PgSession = connectPgSimple(session);
+const databaseUrl = process.env.DATABASE_URL ?? "postgresql://localhost:5432/watchthis_user_service";
+
+export const pgStore = new PgSession({
+  conString: databaseUrl,
+  tableName: "sessions",
+  createTableIfMissing: true,
+});
 
 const baseUrl = new URL(process.env.BASE_URL ?? "http://localhost:8583");
 const sessionSecret = process.env.SESSION_SECRET ?? crypto.randomBytes(64).toString("hex");
@@ -26,7 +33,7 @@ export function applyAuthenticationMiddleware(app: express.Express): void {
       secret: sessionSecret,
       resave: false,
       saveUninitialized: false,
-      store: mongoStore,
+      store: pgStore,
       cookie: {
         domain: baseUrl.hostname.split(".").slice(1).join("."),
       },
@@ -44,7 +51,7 @@ export function applyAuthenticationMiddleware(app: express.Express): void {
   passport.deserializeUser(function (id, done) {
     (async function () {
       try {
-        const user = await User.findById(id);
+        const user = await User.findById(id as string);
         done(null, user);
       } catch (err) {
         done(err);
@@ -63,7 +70,7 @@ export function applyAuthenticationMiddleware(app: express.Express): void {
             return;
           }
 
-          const isMatch = await user.comparePassword(password);
+          const isMatch = await User.comparePassword(user, password);
 
           if (!isMatch) {
             done(null, false, { message: "Incorrect password." });

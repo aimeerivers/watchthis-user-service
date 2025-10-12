@@ -1,0 +1,33 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://www.prisma.io/docs/orm/prisma-schema/overview
+
+generator client {
+  provider = "prisma-client-js"
+  binaryTargets = ["native", "linux-musl-openssl-3.0.x"]
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id        String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  username  String   @unique
+  password  String
+  createdAt DateTime @default(now()) @map("created_at") @db.Timestamptz(6)
+  updatedAt DateTime @updatedAt @map("updated_at") @db.Timestamptz(6)
+
+  @@map("users")
+  @@index([username])
+  @@index([createdAt])
+}
+
+model Session {
+  sid    String   @id
+  sess   Json
+  expire DateTime @db.Timestamp(6)
+
+  @@map("sessions")
+  @@index([expire])
+}

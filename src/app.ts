@@ -2,7 +2,6 @@ import appRootPath from "app-root-path";
 import dotenv from "dotenv";
 import express from "express";
 import helmet from "helmet";
-import mongoose from "mongoose";
 import path from "path";
 
 import packageJson from "../package.json" with { type: "json" };
@@ -10,14 +9,13 @@ import { applyAuthenticationMiddleware, authenticate, ensureAuthenticated } from
 import { getCurrentUser, loginWithJWT, refreshToken } from "./controllers/auth.js";
 import { authenticateJWT, requireJWT } from "./middleware/jwt.js";
 import { validateLogin, validateSignup } from "./middleware/validation.js";
-import { User } from "./models/user.js";
+import { prisma, User } from "./models/user.js";
 import { asyncHandler } from "./utils/asyncHandler.js";
 import { generateTokenPair } from "./utils/jwt.js";
 
-dotenv.config();
-
-const mongoUrl = process.env.MONGO_URL ?? "mongodb://localhost:27017/user-service";
-const mongoUserService = `${mongoUrl}${process.env.NODE_ENV === "test" ? "-test" : ""}`;
+// Load environment variables based on NODE_ENV
+const envFile = process.env.NODE_ENV === "test" ? ".env.test" : ".env";
+dotenv.config({ path: envFile });
 
 // Parse allowed redirect hosts from environment variable
 const getAllowedHosts = (): string[] => {
@@ -39,12 +37,13 @@ const getAllowedHosts = (): string[] => {
 
 const allowedRedirectHosts = getAllowedHosts();
 
-mongoose
-  .connect(mongoUserService)
+// Test database connection
+prisma
+  .$connect()
   .then(() => {
     console.log("Database connected!");
   })
-  .catch((err) => {
+  .catch((err: Error) => {
     console.log(err);
   });
 
@@ -83,11 +82,10 @@ app.post(
   validateSignup,
   asyncHandler(async (req, res) => {
     try {
-      const user = new User({
+      const user = await User.create({
         username: req.body.username,
         password: req.body.password,
       });
-      await user.save();
 
       req.login(user, function (err) {
         if (err !== null && err !== undefined) {
@@ -254,7 +252,16 @@ app.get(
       }
 
       // Find the full user document to generate JWT tokens
-      const userDoc = await User.findById(getUserId(user));
+      const userId = getUserId(user);
+      if (!userId) {
+        res.status(401).json({
+          success: false,
+          error: { code: "USER_ID_MISSING", message: "User ID missing" },
+        });
+        return;
+      }
+
+      const userDoc = await User.findById(userId);
       if (!userDoc) {
         res.status(401).json({
           success: false,
@@ -307,11 +314,7 @@ app.get(
   asyncHandler(async (_req, res) => {
     try {
       // Check database connection
-      if (mongoose.connection.db) {
-        await mongoose.connection.db.admin().ping();
-      } else {
-        throw new Error("Database connection not established");
-      }
+      await prisma.$queryRaw`SELECT 1`;
       res.json({
         status: "healthy",
         service: packageJson.name,
