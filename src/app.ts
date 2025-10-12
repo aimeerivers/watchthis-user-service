@@ -13,7 +13,9 @@ import { prisma, User } from "./models/user.js";
 import { asyncHandler } from "./utils/asyncHandler.js";
 import { generateTokenPair } from "./utils/jwt.js";
 
-dotenv.config();
+// Load environment variables based on NODE_ENV
+const envFile = process.env.NODE_ENV === "test" ? ".env.test" : ".env";
+dotenv.config({ path: envFile });
 
 // Parse allowed redirect hosts from environment variable
 const getAllowedHosts = (): string[] => {

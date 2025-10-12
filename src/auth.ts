@@ -11,7 +11,9 @@ import { Strategy as LocalStrategy } from "passport-local";
 import type { IUser } from "./models/user.js";
 import { User } from "./models/user.js";
 
-dotenv.config();
+// Load environment variables based on NODE_ENV
+const envFile = process.env.NODE_ENV === "test" ? ".env.test" : ".env";
+dotenv.config({ path: envFile });
 
 const PgSession = connectPgSimple(session);
 const databaseUrl = process.env.DATABASE_URL ?? "postgresql://localhost:5432/watchthis_user_service";
