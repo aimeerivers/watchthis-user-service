@@ -51,6 +51,16 @@ export class User {
     }
   }
 
+  static async findByIdAndDelete(id: string): Promise<IUser | null> {
+    try {
+      return await prisma.user.delete({
+        where: { id },
+      });
+    } catch {
+      return null; // User not found
+    }
+  }
+
   // Instance methods simulation
   static async comparePassword(user: IUser, candidatePassword: string): Promise<boolean> {
     try {

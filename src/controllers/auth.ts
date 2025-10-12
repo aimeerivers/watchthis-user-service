@@ -39,7 +39,7 @@ export const loginWithJWT = asyncHandler(async (req: Request, res: Response): Pr
     }
 
     // Verify password
-    const isMatch = await user.comparePassword(password);
+    const isMatch = await User.comparePassword(user, password);
     if (!isMatch) {
       res.status(401).json({
         success: false,
