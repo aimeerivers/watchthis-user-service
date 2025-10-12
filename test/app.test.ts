@@ -2,12 +2,12 @@ import assert from "node:assert";
 import type { Server } from "node:http";
 import { after, before, beforeEach, describe, it } from "node:test";
 
-import mongoose from "mongoose";
 import request, { SuperTest, Test } from "supertest";
 import session from "supertest-session";
 
 import { app } from "../src/app.js";
-import { mongoStore } from "../src/auth.js";
+import { pgStore } from "../src/auth.js";
+import { prisma } from "../src/models/user.js";
 import { User } from "../src/models/user.js";
 import { generateTokenPair, verifyToken } from "../src/utils/jwt.js";
 import { generateValidPassword, generateValidUsername } from "./helpers/testData.js";
@@ -28,9 +28,9 @@ describe("Watch This User Service - All Tests", () => {
   after(async () => {
     server.close();
     await User.deleteMany({});
-    mongoose.connection.close();
-    if (mongoStore !== undefined) {
-      await mongoStore.close();
+    await prisma.$disconnect();
+    if (pgStore !== undefined) {
+      pgStore.close();
     }
   });
 
@@ -146,11 +146,10 @@ describe("Watch This User Service - All Tests", () => {
         username = generateValidUsername();
         password = generateValidPassword();
 
-        const user = new User({
+        const user = await User.create({
           username,
           password,
         });
-        await user.save();
       });
 
       it("should be able to log in with known username and password", async () => {
@@ -196,11 +195,10 @@ describe("Watch This User Service - All Tests", () => {
         username = generateValidUsername();
         password = generateValidPassword();
 
-        const user = new User({
+        const user = await User.create({
           username,
           password,
         });
-        await user.save();
         const loginRes = await testSession.post("/login").type("form").send({ username, password });
         assert.equal(loginRes.statusCode, 302); // Ensure login succeeded
       });
@@ -271,8 +269,7 @@ describe("Watch This User Service - All Tests", () => {
       const username = generateValidUsername();
       const password = generateValidPassword();
 
-      const user = new User({ username, password });
-      await user.save();
+      const user = await User.create({ username, password });
 
       // Log in
       await testSession.post("/login").send({ username, password });
@@ -319,11 +316,10 @@ describe("Watch This User Service - All Tests", () => {
           username = generateValidUsername();
           password = generateValidPassword();
 
-          const user = new User({
+          const user = await User.create({
             username,
             password,
           });
-          await user.save();
           const loginRes = await testSession.post("/login").type("form").send({ username, password });
           assert.equal(loginRes.statusCode, 302); // Ensure login succeeded
         });
@@ -446,8 +442,7 @@ describe("Watch This User Service - All Tests", () => {
         // Create a test user
         const username = generateValidUsername();
         const password = generateValidPassword();
-        const user = new User({ username, password });
-        await user.save();
+        const user = await User.create({ username, password });
 
         const tokens = generateTokenPair(user);
 
@@ -488,8 +483,7 @@ describe("Watch This User Service - All Tests", () => {
         // Create a test user and get token
         const username = generateValidUsername();
         const password = generateValidPassword();
-        const user = new User({ username, password });
-        await user.save();
+        const user = await User.create({ username, password });
 
         const tokens = generateTokenPair(user);
 
@@ -509,8 +503,7 @@ describe("Watch This User Service - All Tests", () => {
         // Create a test user
         const username = generateValidUsername();
         const password = generateValidPassword();
-        const user = new User({ username, password });
-        await user.save();
+        const user = await User.create({ username, password });
 
         const tokens = generateTokenPair(user);
 
@@ -529,8 +522,7 @@ describe("Watch This User Service - All Tests", () => {
         // Create a test user
         const username = generateValidUsername();
         const password = generateValidPassword();
-        const user = new User({ username, password });
-        await user.save();
+        const user = await User.create({ username, password });
 
         const tokens = generateTokenPair(user);
 
@@ -606,8 +598,7 @@ describe("Watch This User Service - All Tests", () => {
         // Create a test user
         const username = generateValidUsername();
         const password = generateValidPassword();
-        const user = new User({ username, password });
-        await user.save();
+        const user = await User.create({ username, password });
 
         const res = await request(app).post("/api/v1/auth/login").send({ username, password }).expect(200);
 
@@ -656,8 +647,7 @@ describe("Watch This User Service - All Tests", () => {
         // Create a test user
         const username = generateValidUsername();
         const password = generateValidPassword();
-        const user = new User({ username, password });
-        await user.save();
+        const user = await User.create({ username, password });
 
         const res = await request(app)
           .post("/api/v1/auth/login")
@@ -674,8 +664,7 @@ describe("Watch This User Service - All Tests", () => {
         // Create a test user and get tokens
         const username = generateValidUsername();
         const password = generateValidPassword();
-        const user = new User({ username, password });
-        await user.save();
+        const user = await User.create({ username, password });
 
         const loginRes = await request(app).post("/api/v1/auth/login").send({ username, password }).expect(200);
 
@@ -721,8 +710,7 @@ describe("Watch This User Service - All Tests", () => {
         // Create a test user and get tokens
         const username = generateValidUsername();
         const password = generateValidPassword();
-        const user = new User({ username, password });
-        await user.save();
+        const user = await User.create({ username, password });
 
         const loginRes = await request(app).post("/api/v1/auth/login").send({ username, password }).expect(200);
 
@@ -739,8 +727,7 @@ describe("Watch This User Service - All Tests", () => {
         // Create a test user and get tokens
         const username = generateValidUsername();
         const password = generateValidPassword();
-        const user = new User({ username, password });
-        await user.save();
+        const user = await User.create({ username, password });
 
         const tokens = generateTokenPair(user);
 
@@ -763,8 +750,7 @@ describe("Watch This User Service - All Tests", () => {
         // Create a test user and get token
         const username = generateValidUsername();
         const password = generateValidPassword();
-        const user = new User({ username, password });
-        await user.save();
+        const user = await User.create({ username, password });
 
         const loginRes = await request(app).post("/api/v1/auth/login").send({ username, password }).expect(200);
 
@@ -806,8 +792,7 @@ describe("Watch This User Service - All Tests", () => {
         // Create a test user and get token
         const username = generateValidUsername();
         const password = generateValidPassword();
-        const user = new User({ username, password });
-        await user.save();
+        const user = await User.create({ username, password });
 
         const tokens = generateTokenPair(user);
 
@@ -828,8 +813,7 @@ describe("Watch This User Service - All Tests", () => {
         // Create a test user and get tokens
         const username = generateValidUsername();
         const password = generateValidPassword();
-        const user = new User({ username, password });
-        await user.save();
+        const user = await User.create({ username, password });
 
         const tokens = generateTokenPair(user);
 
@@ -849,8 +833,7 @@ describe("Watch This User Service - All Tests", () => {
         // Create a test user
         const username = generateValidUsername();
         const password = generateValidPassword();
-        const user = new User({ username, password });
-        await user.save();
+        const user = await User.create({ username, password });
 
         // Create a session by logging in via web interface
         const testSession = session(app);
@@ -889,8 +872,7 @@ describe("Watch This User Service - All Tests", () => {
         // Create a test user
         const username = generateValidUsername();
         const password = generateValidPassword();
-        const user = new User({ username, password });
-        await user.save();
+        const user = await User.create({ username, password });
 
         // Create a session by logging in
         const testSession = session(app);
@@ -911,8 +893,7 @@ describe("Watch This User Service - All Tests", () => {
         // Create a test user and session
         const username = generateValidUsername();
         const password = generateValidPassword();
-        const user = new User({ username, password });
-        await user.save();
+        const user = await User.create({ username, password });
 
         const testSession = session(app);
         await testSession.post("/login").send({ username, password }).expect(302);
@@ -955,8 +936,7 @@ describe("Watch This User Service - All Tests", () => {
         // Create a test user
         const username = generateValidUsername();
         const password = generateValidPassword();
-        const user = new User({ username, password });
-        await user.save();
+        const user = await User.create({ username, password });
 
         // Test JWT auth works
         const jwtRes = await request(app).post("/api/v1/auth/login").send({ username, password }).expect(200);
@@ -974,8 +954,7 @@ describe("Watch This User Service - All Tests", () => {
       it("should generate valid token pairs", async () => {
         const username = generateValidUsername();
         const password = generateValidPassword();
-        const user = new User({ username, password });
-        await user.save();
+        const user = await User.create({ username, password });
 
         const tokens = generateTokenPair(user);
 
@@ -998,8 +977,7 @@ describe("Watch This User Service - All Tests", () => {
       it("should verify tokens correctly", async () => {
         const username = generateValidUsername();
         const password = generateValidPassword();
-        const user = new User({ username, password });
-        await user.save();
+        const user = await User.create({ username, password });
 
         const tokens = generateTokenPair(user);
         const decoded = verifyToken(tokens.accessToken);

@@ -1,89 +1,182 @@
 # watchthis-user-service
 
-User management service for WatchThis
+User management service for WatchThis - provides user authentication, session management, and JWT token generation.
 
-## Getting started
+## Prerequisites
 
-Add a `.env` file and add some environment variables:
+- **Node.js** (v18 or later)
+- **PostgreSQL** (v16 or later)
 
-```text
-BASE_URL=http://localhost:8583
-MONGO_URL=mongodb://localhost:27017/user-service
-SESSION_SECRET=verysecret
-```
+## Getting Started
 
-Install npm dependencies
+### 1. Install Dependencies
 
 ```bash
 npm install
 ```
 
-Install mongodb
+### 2. Set up PostgreSQL
+
+Install PostgreSQL (if not already installed):
 
 ```bash
-brew tap mongodb/brew
-brew install mongodb-community
+# On macOS with Homebrew
+brew install postgresql@16
+brew services start postgresql@16
 ```
 
-Run mongodb locally
+Create a database user and database:
 
 ```bash
-brew services start mongodb/brew/mongodb-community
+# Connect to PostgreSQL
+psql postgres
+
+# Create user and database
+CREATE USER watchthis WITH PASSWORD 'watchthis_dev';
+CREATE DATABASE watchthis_user OWNER watchthis;
+GRANT ALL PRIVILEGES ON DATABASE watchthis_user TO watchthis;
+
+# Exit PostgreSQL
+\q
 ```
 
-If you want a GUI to look at the database, i recommend
+### 3. Configure Environment
 
 ```bash
-brew install mongodb-compass
+# Setup environment variables
+cp .env.local .env
+# Edit .env if needed for your local setup
 ```
 
-## Build the source code
+### 4. Initialize Database
+
+Create the database tables using Prisma:
+
+```bash
+# Push schema to database (creates tables)
+npm run database:setup
+
+# Generate Prisma client (should already be done)
+npx prisma generate
+```
+
+### 5. Optional: Database GUI
+
+For a PostgreSQL GUI, we recommend:
+
+```bash
+# pgAdmin (web-based)
+brew install --cask pgadmin4
+
+# Or TablePlus (native app)
+brew install --cask tableplus
+
+# Or use Prisma Studio
+npx prisma studio
+```
+
+## Development Workflow
+
+### Build the source code
 
 ```bash
 npm run build
 ```
 
-## Run unit tests
+### Run unit tests
 
 ```bash
 npm run test
 ```
 
-## Build CSS
+**Note:** Tests use a separate test database. The test suite will automatically clean up data between tests.
+
+### Build CSS
 
 ```bash
 npm run tailwind:css
 ```
 
-## Run the server locally
+### Run the server locally
 
 ```bash
 npm run start
 ```
 
-Visit http://localhost:8583 in your browser
+Visit http://localhost:8583 in your browser to see the web interface.
 
-## Run in development mode
+### Run in development mode
 
 ```bash
 npm run dev
 ```
 
-This will automatically rebuild the source code and restart the server for you.
+This will automatically:
 
-## Format code
+- Rebuild TypeScript source code when files change
+- Restart the server
+- Rebuild CSS when Tailwind classes change
+
+### Database Operations
+
+```bash
+# View current database schema
+npx prisma db pull
+
+# Apply schema changes to database
+npm run database:setup
+
+# Generate Prisma client after schema changes
+npx prisma generate
+
+# Open Prisma Studio (database browser)
+npx prisma studio
+
+# Reset database (⚠️ deletes all data)
+npx prisma db push --force-reset
+```
+
+## Code Quality
 
 The project uses ESLint and Prettier to ensure consistent coding standards.
 
 ```bash
+# Check and fix TypeScript/JavaScript files
 npm run lint
+
+# Format all files
 npm run format
+
+# Check package.json consistency
 npm run package:lint
+
+# Run all checks
+npm run lint && npm run format && npm run package:lint
 ```
 
-- `lint` will check for errors and fix formatting in `.ts` and `.js` files.
-- `format` will apply format rules to all possible files.
-- `package:lint` will warn of any inconsistencies in the `package.json` file.
+## Architecture
+
+### Database Schema
+
+The service uses PostgreSQL with Prisma ORM:
+
+- **Users table**: Stores user credentials and profile information
+- **Sessions table**: Manages web session data (replaces connect-mongo)
+
+### Authentication Methods
+
+1. **Web Sessions**: Traditional cookie-based authentication for web interface
+2. **JWT Tokens**: Stateless API authentication for microservices communication
+
+### Technology Stack
+
+- **Runtime**: Node.js with TypeScript
+- **Framework**: Express.js
+- **Database**: PostgreSQL with Prisma ORM
+- **Authentication**: Passport.js + JWT
+- **Session Store**: PostgreSQL (connect-pg-simple)
+- **Frontend**: Pug templates + TailwindCSS
+- **Testing**: Node.js built-in test runner
 
 ## JWT Authentication
 
@@ -311,3 +404,70 @@ The API returns structured error responses:
 - `INVALID_CREDENTIALS` - Invalid username or password
 - `AUTHENTICATION_REQUIRED` - Valid JWT token required
 - `INVALID_REFRESH_TOKEN` - Refresh token is invalid or expired
+
+## Production Deployment
+
+### Environment Variables
+
+For production deployment (e.g., Scalingo), set these environment variables:
+
+```bash
+# Server
+BASE_URL=https://your-app.scalingo.io
+PORT=8583
+NODE_ENV=production
+ALLOWED_REDIRECT_HOSTS=your-app.scalingo.io,yourdomain.com
+
+# Database (from Scalingo PostgreSQL addon)
+DATABASE_URL=postgresql://username:password@host:port/database
+
+# Security (generate secure random strings)
+SESSION_SECRET=very-long-random-string-for-session-security
+JWT_SECRET=another-very-long-random-string-for-jwt-tokens
+
+# JWT Configuration (optional, defaults shown)
+JWT_EXPIRES_IN=24h
+JWT_REFRESH_EXPIRES_IN=7d
+```
+
+### Database Migration on Scalingo
+
+After deploying, run the database migration:
+
+```bash
+# Using Scalingo CLI
+scalingo --app your-app run npm run database:setup
+
+# Or through the web dashboard
+# Go to your app → Run → One-off container
+# Command: npm run database:setup
+```
+
+### Health Check
+
+The service provides a health check endpoint:
+
+```bash
+GET /health
+```
+
+Returns:
+
+```json
+{
+  "status": "healthy",
+  "service": "watchthis-user-service",
+  "version": "2.3.5",
+  "database": "connected",
+  "timestamp": "2025-10-12T14:30:00.000Z"
+}
+```
+
+## Migration from MongoDB
+
+This service has been migrated from MongoDB to PostgreSQL. Key changes:
+
+- **Object IDs**: Changed from MongoDB ObjectIds to PostgreSQL UUIDs
+- **Schema**: Defined using Prisma instead of Mongoose
+- **Sessions**: Moved from MongoDB sessions to PostgreSQL sessions
+- **Queries**: Converted from Mongoose syntax to Prisma syntax
