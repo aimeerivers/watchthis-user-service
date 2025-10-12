@@ -17,6 +17,7 @@
     "build:watch": "tsc --watch",
     "clean": "rm -rf dist",
     "database:setup": "npx prisma db push",
+    "database:test:setup": "dotenv -e .env.test -- npx prisma db push",
     "dev": "concurrently \"npm run build:watch\" \"npm run start:watch\" \"npm run tailwind:css:watch\"",
     "format": "prettier --write .",
     "format:check": "prettier --check .",

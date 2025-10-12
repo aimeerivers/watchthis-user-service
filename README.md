@@ -60,7 +60,22 @@ npm run database:setup
 npx prisma generate
 ```
 
-### 5. Optional: Database GUI
+### 5. Set Up Test Database
+
+The tests use a separate database to avoid interfering with development data:
+
+```bash
+# Create test database
+createdb watchthis_user_test
+psql postgres -c "GRANT ALL PRIVILEGES ON DATABASE watchthis_user_test TO watchthis;"
+
+# Initialize test database schema
+npm run database:test:setup
+```
+
+**Note:** Tests automatically load configuration from `.env.test` which points to the separate test database.
+
+### 6. Optional: Database GUI
 
 For a PostgreSQL GUI, we recommend:
 
@@ -116,25 +131,6 @@ This will automatically:
 - Rebuild TypeScript source code when files change
 - Restart the server
 - Rebuild CSS when Tailwind classes change
-
-### Database Operations
-
-```bash
-# View current database schema
-npx prisma db pull
-
-# Apply schema changes to database
-npm run database:setup
-
-# Generate Prisma client after schema changes
-npx prisma generate
-
-# Open Prisma Studio (database browser)
-npx prisma studio
-
-# Reset database (⚠️ deletes all data)
-npx prisma db push --force-reset
-```
 
 ## Code Quality
 
