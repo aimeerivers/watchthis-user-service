@@ -432,7 +432,9 @@ After deploying, run the database migration:
 
 ```bash
 # Using Scalingo CLI
-scalingo --app your-app run npm run database:setup
+scalingo --app your-app run bash
+
+npm run database:setup
 
 # Or through the web dashboard
 # Go to your app → Run → One-off container
