@@ -1,5 +1,17 @@
 # Changelog
 
+## [3.0.1](https://github.com/aimeerivers/watchthis-user-service/compare/v3.0.0...v3.0.1) (2025-10-20)
+
+
+### Documentation
+
+* Update the README with how to run Scalingo database migration ([#180](https://github.com/aimeerivers/watchthis-user-service/issues/180)) ([5e3fb39](https://github.com/aimeerivers/watchthis-user-service/commit/5e3fb3912df35b14c369f6393d3e8b8d21aafe31))
+
+
+### Chores
+
+* Update dependencies ([#182](https://github.com/aimeerivers/watchthis-user-service/issues/182)) ([d2b255e](https://github.com/aimeerivers/watchthis-user-service/commit/d2b255eaaebdaa721237d1de8c2b889d68d3be92))
+
 ## [3.0.0](https://github.com/aimeerivers/watchthis-user-service/compare/v2.3.5...v3.0.0) (2025-10-12)
 
 
